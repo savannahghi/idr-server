@@ -51,7 +51,7 @@ X_FRAME_OPTIONS = "DENY"
 # INSTALLED APPS
 ###############################################################################
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -59,6 +59,18 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+
+THIRD_PARTY_APPS = [
+    "rest_framework",
+    "rest_framework.authtoken",
+]
+
+LOCAL_APPS = [
+    "apps.core.apps.CoreConfig",
+    "apps.sql_sources.apps.SqlSourcesConfig"
+]
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 
 ###############################################################################
@@ -119,10 +131,11 @@ TEMPLATES = [
 ###############################################################################
 
 REST_FRAMEWORK = {
-    "DEFAULT_MODEL_SERIALIZER_CLASS": ("rest_framework.serializers.ModelSerializer",),
+    "DEFAULT_MODEL_SERIALIZER_CLASS": (
+        "rest_framework.serializers.ModelSerializer",
+    ),
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
-        "rest_framework_datatables.renderers.DatatablesRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
         "rest_framework.renderers.AdminRenderer",
     ),
@@ -133,21 +146,20 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.FileUploadParser",
     ),
     "DEFAULT_FILTER_BACKENDS": (
-        "rest_framework_datatables.filters.DatatablesFilterBackend",
         "django_filters.rest_framework.DjangoFilterBackend",
         "rest_framework.filters.OrderingFilter",
-        "fahari.common.filters.OrganisationFilterBackend",
-        "fahari.common.filters.AllottedFacilitiesFilterBackend",
     ),
     "DEFAULT_PAGINATION_CLASS": (
-        "rest_framework_datatables.pagination.DatatablesPageNumberPagination"
+        "rest_framework.pagination.PageNumberPagination"
     ),
     "PAGE_SIZE": 100,
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.DjangoModelPermissions",),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.DjangoModelPermissions",
+    ),
     "DEFAULT_METADATA_CLASS": "rest_framework.metadata.SimpleMetadata",
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.UserRateThrottle",
@@ -204,6 +216,8 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
     "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
 ]
+LOGIN_REDIRECT_URL = "users:redirect"
+LOGIN_URL = "account_login"
 
 
 ###############################################################################
@@ -227,3 +241,10 @@ LOGGING = {
     },
     "root": {"level": "INFO", "handlers": ["console"]},
 }
+
+
+###############################################################################
+# OTHER
+###############################################################################
+
+ADMIN_URL = "admin/"
