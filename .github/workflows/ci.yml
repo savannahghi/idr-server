@@ -57,7 +57,6 @@ jobs:
 
     - name: Install Requirements
       run: |
-        export LD_PRELOAD=/lib/x86_64-linux-gnu/libstdc++.so.6:$LD_PRELOAD
         sudo apt-get update
         sudo apt-get install postgis gdal-bin libgdal-dev
         python -m pip install --upgrade pip
