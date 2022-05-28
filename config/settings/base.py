@@ -14,7 +14,7 @@ import environs
 from pathlib import Path
 
 ###############################################################################
-# LOAD ENVIRONMENT
+# READ ENVIRONMENT
 ###############################################################################
 env = environs.Env()
 
@@ -27,7 +27,10 @@ ALLOWED_HOSTS = env.list(
     ]
 )
 DEBUG = env.bool("DJANGO_DEBUG", False)
-SECRET_KEY = env.str("DJANGO_SECRET_KEY")
+SECRET_KEY = env.str(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-xlb*ys8xnqwg$b0b04c&=y_z"
+)
 
 
 ###############################################################################
@@ -79,6 +82,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
