@@ -1,0 +1,8 @@
+{% load static i18n compress %}
+{% for visualization in visualizations %}
+    <div style="overflow-x: hidden; height: 100%">
+        <iframe title="{{ visualization.title }}" scrolling="no" style="height: 100vh; width: calc(100% + 17px); border: none;" src="{{ visualization.source }}" frameborder="0" loading="lazy" allowFullScreen="true"></iframe>
+    </div>
+{% empty %}
+    <p class="font-weight-bold text-center">No visualizations added yet, for this dashboard.</p>
+{% endfor %}
