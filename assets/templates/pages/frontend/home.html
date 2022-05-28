@@ -1,7 +1,11 @@
 {% extends "pages/base.html" %}
+{% load static i18n compress %}
+
+{% block sidebar %}
+    {{ block.super }}
+{% endblock sidebar %}
+
 {% block content %}
-
-
 <!-- Content Row -->
 <div class="row">
   <div class="col-12">
@@ -10,9 +14,23 @@
             class="card-header py-3 d-flex">
         </div>
           <!--dashboard contents-->
-        <div style="overflow-x: hidden; height: 100%">
-            <iframe title="ICDR_v1 - ART INITIATION" scrolling="no" style="height: 100vh; width: calc(100% + 17px); border: none;" src="https://app.powerbi.com/view?r=eyJrIjoiMTNjMzI1ZDItMDNjNy00MDhlLTg2NWEtOGY3NGZmNzBhOTlmIiwidCI6IjYyNjg2NDAwLTllZjMtNDBkOS04ZTQxLWRiMTUzNzRiZTViZSJ9" frameborder="0" allowFullScreen="true"></iframe>
-        </div>      
+        <div id="dashboards-tabs-content" class="tab-content">
+            {% for dashboard in dashboards %}
+                <div class="tab-pane fade {% if forloop.first %} active show {% endif %}" id="{{ dashboard.pk }}" role="tabpanel">
+                    {% if request.user.is_staff %}
+                        {% with visualizations=dashboard.visualizations.all %}
+                            {% include "atoms/visualization_display.html" %}
+                        {% endwith %}
+                    {% else %}
+                        {% with visualizations=dashboard.visualizations.published %}
+                            {% include "atoms/visualization_display.html" %}
+                        {% endwith %}
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p class="font-weight-bold text-center">No dashboards added yet.</p>
+            {% endfor %}
+        </div>
   </div>
 </div>
 
