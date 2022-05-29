@@ -9,6 +9,7 @@ router = DefaultRouter()
 router.register("generic_sources", GenericSourceViewSet)
 
 
+
 urlpatterns = [
     path("", include(router.urls))
 ]

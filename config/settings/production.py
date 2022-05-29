@@ -20,7 +20,8 @@ ALLOWED_HOSTS = env.list(
         ".fahariyajamii.org",
         "cbs.fahariyajamii.org",
         "idr.fahariyajamii.org",
-        "icdr.fahariyajamii.org"
+        "icdr.fahariyajamii.org",
+        "192.168.100.55"
     ]
 )
 SECRET_KEY = env.str("DJANGO_SECRET_KEY")

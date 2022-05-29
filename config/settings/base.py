@@ -23,7 +23,8 @@ ALLOWED_HOSTS = env.list(
     default=[
         ".fahariyajamii.org",
         "idr.fahariyajamii.org",
-        "icdr.fahariyajamii.org"
+        "icdr.fahariyajamii.org",
+        "192.168.100.55"
     ]
 )
 DEBUG = env.bool("DJANGO_DEBUG", False)
@@ -111,7 +112,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / 'templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
