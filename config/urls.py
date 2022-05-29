@@ -23,7 +23,7 @@ from apps.core.views import  HomeView
 
 
 urlpatterns = [
-    path("",HomeView.as_view(),name="home"),
+    path("",HomeView.as_view()),
     path("accounts/", include("django.contrib.auth.urls")),
     path("api/", include("apps.core.urls")),
     path("api/", include("apps.sql_sources.urls")),
