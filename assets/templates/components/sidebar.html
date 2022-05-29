@@ -1,0 +1,11 @@
+{% load static i18n compress %}
+
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    {% block brand %}
+        {% include "atoms/brand.html" %}
+    {% endblock brand %}
+    {% include "atoms/dashboard_link.html" %}
+
+    <hr class="sidebar-divider">
+    {% include "atoms/sidebar_toggle.html" %}
+</ul>

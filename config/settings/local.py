@@ -6,7 +6,7 @@ from .base import env
 # INSTALLED APPS
 ###############################################################################
 
-INSTALLED_APPS += ["whitenoise.runserver_nostatic"]
+INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
 
 
 ###############################################################################
