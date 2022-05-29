@@ -64,12 +64,14 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    "compressor",
     "rest_framework",
     "rest_framework.authtoken",
 ]
 
 LOCAL_APPS = [
     "apps.core.apps.CoreConfig",
+    "apps.frontend.apps.FrontendConfig",
     "apps.sql_sources.apps.SqlSourcesConfig"
 ]
 
@@ -111,7 +113,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": ["assets/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -201,6 +203,11 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "assets" / "static"
 ]
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder"
+]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
@@ -220,7 +227,7 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
     "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
 ]
-LOGIN_REDIRECT_URL = "users:redirect"
+LOGIN_REDIRECT_URL = "home"
 LOGIN_URL = "account_login"
 
 

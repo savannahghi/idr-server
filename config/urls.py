@@ -17,16 +17,26 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.views.generic import RedirectView
+
+from apps.frontend.views import HomeView
 
 
 urlpatterns = [
-    path("", RedirectView.as_view(url=settings.ADMIN_URL, permanent=True)),
+    path("", HomeView.as_view(), name="home"),
     path("accounts/", include("django.contrib.auth.urls")),
     path("api/", include("apps.core.urls")),
     path("api/", include("apps.sql_sources.urls")),
+    path("ui/", include("apps.frontend.urls")),
     path(settings.ADMIN_URL, admin.site.urls),
+    re_path(
+        r"^favicon\.ico$",
+        RedirectView.as_view(
+            url=settings.STATIC_URL + "favicon.ico",
+            permanent=True
+        ),
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

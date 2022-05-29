@@ -61,6 +61,7 @@ jobs:
         sudo apt-get install postgis gdal-bin libgdal-dev
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        npm ci
 
     - name: Setup Django
       run: |

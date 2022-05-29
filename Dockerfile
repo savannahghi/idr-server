@@ -1,12 +1,12 @@
-ARG PYTHON_VERSION=3.9-slim-buster
+ARG PYTHON_VERSION=3.10-slim-buster
 
 FROM node:10-stretch-slim as client-builder
 
 ARG APP_HOME=/app
 WORKDIR ${APP_HOME}
-#
-#COPY ./package.json ${APP_HOME}
-#RUN npm install && npm cache clean --force
+
+COPY ./package.json ${APP_HOME}
+RUN npm install && npm cache clean --force
 COPY . ${APP_HOME}
 #RUN npm run build
 
@@ -71,7 +71,7 @@ RUN chmod +x /entrypoint
 
 # copy application code to WORKDIR
 COPY --from=client-builder ${APP_HOME} ${APP_HOME}
-#RUN npm run build
+RUN npm run build
 #RUN npm install -g mjml
 
 ENTRYPOINT ["/entrypoint"]

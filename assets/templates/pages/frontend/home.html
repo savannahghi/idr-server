@@ -1,0 +1,14 @@
+{% extends "pages/base.html" %}
+{% block content %}
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mt-2 mb-2">
+    <h1 class="h3 mb-0 text-gray-800">Welcome, {% firstof user.name user.username user.email %}</h1>
+</div>
+
+<!-- Content Row -->
+<div class="row">
+   <p>Content goes here ...</p>
+</div>
+
+{% endblock content %}
