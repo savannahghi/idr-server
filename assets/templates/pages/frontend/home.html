@@ -1,27 +1,18 @@
 {% extends "pages/base.html" %}
 {% block content %}
 
-<!-- Page Heading -->
-<div class="d-sm-flex align-items-center justify-content-between mt-2 mb-2">
-    <h1 class="h3 mb-0 text-gray-800">Welcome, {% firstof user.name user.username user.email %}</h1>
-</div>
 
 <!-- Content Row -->
 <div class="row">
   <div class="col-12">
-      <div class="card shadow mb-4">
-          <!-- Card Header - Dropdown -->
-          <div
-              class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-              <h6 class="m-0 font-weight-bold text-primary">Multi-month Dispensing</h6>
-          </div>
-          <!-- Card Body -->
-          <div class="card-body">
-              <div class="chart-area">
-                  <iframe title="ICDR_v1" style="height:1000px; width:100%;" src="https://app.powerbi.com/view?r=eyJrIjoiNzJhZTE1M2MtYjgwNi00YWQyLWIzZTEtOTlkMjk4NGVkMWUwIiwidCI6IjYyNjg2NDAwLTllZjMtNDBkOS04ZTQxLWRiMTUzNzRiZTViZSJ9&pageName=ReportSection" frameborder="0" allowFullScreen="true"></iframe>
-              </div>
-          </div>
-      </div>
+      <!--a simple place holder-->
+        <div
+            class="card-header py-3 d-flex">
+        </div>
+          <!--dashboard contents-->
+        <div style="overflow-x: hidden;">
+            <iframe title="ICDR_v1" scrolling="no" style="height: 100vh; width: calc(100% + 17px); border: none; display:block; padding:10px;" src="https://app.powerbi.com/view?r=eyJrIjoiNzJhZTE1M2MtYjgwNi00YWQyLWIzZTEtOTlkMjk4NGVkMWUwIiwidCI6IjYyNjg2NDAwLTllZjMtNDBkOS04ZTQxLWRiMTUzNzRiZTViZSJ9&pageName=ReportSection" frameborder="0"></iframe>
+        </div>      
   </div>
 </div>
 
