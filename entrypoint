@@ -13,5 +13,8 @@ python /app/manage.py createcachetable
 python /app/manage.py collectstatic --noinput
 >&2 echo 'Collected static files...'
 
+python /app/manage.py compress
+>&2 echo 'Compressed static assets...'
+
 >&2 echo 'About to run Gunicorn...'
 /usr/local/bin/gunicorn config.asgi --bind 0.0.0.0:$PORT --chdir=/app -k uvicorn.workers.UvicornWorker
