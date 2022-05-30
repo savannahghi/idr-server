@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from typing import TypeVar
 
@@ -68,6 +69,8 @@ class BaseModel(models.Model):
     This is the base `Model` of the project from which all concrete inherit
     from.
     """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
     # Default Manager
     objects: BaseManager = BaseManager()
 
