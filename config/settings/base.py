@@ -76,6 +76,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "apps.core.apps.CoreConfig",
     "apps.frontend.apps.FrontendConfig",
+    "apps.misc.apps.MiscConfig",
     "apps.sql_sources.apps.SqlSourcesConfig",
     "apps.users.apps.UsersConfig"
 ]
@@ -104,6 +105,7 @@ MIDDLEWARE = [
 ###############################################################################
 
 APPEND_SLASH = True
+ASGI_APPLICATION = "config.asgi.application"
 BASE_URL = "http://localhost:8000"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 INTERNAL_IPS = ["127.0.0.1"]

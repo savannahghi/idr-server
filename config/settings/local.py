@@ -24,3 +24,45 @@ DATABASES = {
         "ATOMIC_REQUESTS": True,
     },
 }
+
+
+###############################################################################
+# LOGGING
+###############################################################################
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": (
+                "{levelname}: {asctime} - {process:d} {thread:d} - "
+                "<module={module} | function={funcName} | line={lineno:d}> - "
+                "{message}"
+            ),
+            "style": "{"
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+            "level": "DEBUG",
+        },
+        "file": {
+            "backupCount": 5,
+            "class": "logging.handlers.RotatingFileHandler",
+            "encoding": "utf-8",
+            "filename": BASE_DIR / "logs" / "idr_server.log",
+            "formatter": "verbose",
+            "maxBytes": 1048576  # 1 MB
+        }
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console", "file"],
+            "level": env.str("DJANGO_LOG_LEVEL", default="INFO"),
+            "propagate": True,
+        }
+    }
+}
