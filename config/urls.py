@@ -29,6 +29,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     path("api/", include("apps.core.urls")),
     path("api/", include("apps.sql_sources.urls")),
+    path("misc/", include("apps.misc.urls")),
     path("ui/", include("apps.frontend.urls")),
     path(settings.ADMIN_URL, admin.site.urls),
     re_path(
