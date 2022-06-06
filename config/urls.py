@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path, re_path
 from django.views import defaults as default_views
+from rest_framework.authtoken import views
 from django.views.generic import RedirectView
 
 from apps.frontend.views import HomeView
@@ -32,6 +33,7 @@ urlpatterns = [
     path("misc/", include("apps.misc.urls")),
     path("ui/", include("apps.frontend.urls")),
     path(settings.ADMIN_URL, admin.site.urls),
+    path('api-token-auth/', views.obtain_auth_token, name='api-token-auth'),
     re_path(
         r"^favicon\.ico$",
         RedirectView.as_view(

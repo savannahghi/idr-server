@@ -1,10 +1,14 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
+
 
 from .models import GenericSource
 from .serializers import GenericSourceSerializer
 
 
 class BaseViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated,]
+    
     """
     This is the base `ViewSet` from which all other view sets are derived from.
     """
