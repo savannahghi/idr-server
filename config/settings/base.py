@@ -69,11 +69,13 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "compressor",
     "crispy_forms",
+    "knox",
     "rest_framework",
     "rest_framework.authtoken",
 ]
 
 LOCAL_APPS = [
+    "apps.app_auth.apps.AppAuthConfig",
     "apps.core.apps.CoreConfig",
     "apps.frontend.apps.FrontendConfig",
     "apps.misc.apps.MiscConfig",
@@ -167,6 +169,7 @@ REST_FRAMEWORK = {
     ),
     "PAGE_SIZE": 100,
     "DEFAULT_AUTHENTICATION_CLASSES": (
+        "knox.auth.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ),
