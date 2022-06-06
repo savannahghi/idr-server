@@ -4,7 +4,6 @@ from .models import Dashboard, Visualization
 
 
 class VisualizationSerializer(AuditBaseSerializer):
-
     class Meta:
         model = Visualization
         fields = "__all__"

@@ -3,20 +3,25 @@ name: CI
 on: [push]
 
 env:
-  DOCKER_BUILDKIT: 1 # Enable Buildkit and let compose use it to speed up image building
   COMPOSE_DOCKER_CLI_BUILD: 1
   DJANGO_DEBUG: true
-  DJANGO_SECRET_KEY: "${{ secrets.DJANGO_SECRET_KEY }}"
-  USE_DOCKER: no
-  POSTGRES_HOST: localhost
-  POSTGRES_PORT: 5432
-  POSTGRES_DB: postgres
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
-  GOOGLE_APPLICATION_CREDENTIALS: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}"
-  DJANGO_GCP_STORAGE_BUCKET_NAME: "${{ secrets.DJANGO_GCP_STORAGE_BUCKET_NAME }}"
-  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
   DJANGO_EMAIL_BACKEND: "${{ secrets.DJANGO_EMAIL_BACKEND }}"
+  DJANGO_GCP_STORAGE_BUCKET_NAME: "${{ secrets.DJANGO_GCP_STORAGE_BUCKET_NAME }}"
+  DJANGO_SECRET_KEY: "${{ secrets.DJANGO_SECRET_KEY }}"
+  DOCKER_BUILDKIT: 1 # Enable Buildkit and let compose use it to speed up image building
+  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  GOOGLE_APPLICATION_CREDENTIALS: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}"
+  POSTGRES_DB: postgres
+  POSTGRES_HOST: localhost
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_PORT: 5432
+  POSTGRES_USER: postgres
+  TEST_POSTGRES_DB: idr_server_test
+  TEST_POSTGRES_HOST: localhost
+  TEST_POSTGRES_PASSWORD: postgres
+  TEST_POSTGRES_PORT: 5432
+  TEST_POSTGRES_USER: postgres
+  USE_DOCKER: no
 
 jobs:
   build:
@@ -51,15 +56,19 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+      # Run all pre-commit hooks on all the files.
+      # Getting only staged files can be tricky in case a new PR is opened
+      # since the action is run on a branch in detached head state
+    - name: Install and run pre-commit
+      uses: pre-commit/action@v3.0.0
+
     - name: Install Requirements
       run: |
         sudo apt-get update
         sudo apt-get install postgis gdal-bin libgdal-dev
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        python -m pip install tox tox-gh-actions
         npm ci
 
-    - name: Setup Django
-      run: |
-        python manage.py migrate
-        python manage.py collectstatic --noinput
+    - name: Test with tox
+      run: tox -r

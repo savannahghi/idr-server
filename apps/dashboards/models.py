@@ -6,20 +6,20 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.core.models import AuditBase, AuditBaseManager, BaseQuerySet
 
-
 # =============================================================================
 # CONSTANTS
 # =============================================================================
 
 _DEFAULT_VISUALIZATION_ATTRIBUTES: Mapping[str, Any] = {
     "allowFullScreen": "true",
-    "frameboarder": 0
+    "frameboarder": 0,
 }
 
 
 # =============================================================================
 # HELPERS
 # =============================================================================
+
 
 def _default_visualization_attrs_factory() -> Mapping[str, Any]:
     return _DEFAULT_VISUALIZATION_ATTRIBUTES
@@ -28,6 +28,7 @@ def _default_visualization_attrs_factory() -> Mapping[str, Any]:
 # =============================================================================
 # QUERY SETS
 # =============================================================================
+
 
 class DashboardQuerySet(BaseQuerySet):
     """The query set for the Dashboard models."""
@@ -49,8 +50,10 @@ class VisualizationQuerySet(BaseQuerySet):
 # MANAGERS
 # =============================================================================
 
+
 class DashboardManager(AuditBaseManager.from_queryset(DashboardQuerySet)):
     """Manager for the dashboard model."""
+
     use_in_migrations = True
 
     def get_queryset(self) -> DashboardQuerySet:
@@ -61,6 +64,7 @@ class VisualizationManager(
     AuditBaseManager.from_queryset(VisualizationQuerySet)
 ):
     """Manager for the visualization model."""
+
     use_in_migrations = True
 
     def get_queryset(self) -> VisualizationQuerySet:
@@ -71,22 +75,24 @@ class VisualizationManager(
 # MODELS
 # =============================================================================
 
+
 class Dashboard(AuditBase):
     """This represents a collection of related visualizations."""
+
     class DashboardLayouts(models.TextChoices):
         """The different layouts that are supported by dashboards."""
+
         FREE_LAYOUT = "free", _("Free Layout")
         NOT_SPECIFIED = "none", _("Not Specified")
 
     title = models.CharField(
-        max_length=200,
-        help_text=_("A descriptive title for this dashboard.")
+        max_length=200, help_text=_("A descriptive title for this dashboard.")
     )
     description = models.TextField(blank=True, default="")
     layout = models.CharField(
         choices=DashboardLayouts.choices,
         default=DashboardLayouts.NOT_SPECIFIED.value,
-        max_length=15
+        max_length=15,
     )
     weight = models.SmallIntegerField(
         blank=True,
@@ -96,7 +102,7 @@ class Dashboard(AuditBase):
             "This indicates the importance of this dashboard. Dashboards with "
             "higher weights/precedence should generally be displayed before "
             "those with lower weights."
-        )
+        ),
     )
     visualizations = models.ManyToManyField("Visualization")
     is_published = models.BooleanField(
@@ -104,7 +110,7 @@ class Dashboard(AuditBase):
         help_text=_(
             "This flag indicates whether a dashboard and it's visualizations "
             "are ready for consumption by the stakeholders/users."
-        )
+        ),
     )
 
     # Override the default manager
@@ -119,9 +125,10 @@ class Visualization(AuditBase):
 
     The visualizations are embedded inside an iframe.
     """
+
     title = models.CharField(
         max_length=200,
-        help_text=_("A descriptive title for this visualization.")
+        help_text=_("A descriptive title for this visualization."),
     )
     description = models.TextField(blank=True, default="")
     source = models.URLField(
@@ -130,7 +137,7 @@ class Visualization(AuditBase):
         help_text=_(
             "The url to the source of this visualization. E.g A url to a "
             "Power Bi dashboard."
-        )
+        ),
     )
     width = models.DecimalField(
         max_digits=6,
@@ -139,7 +146,7 @@ class Visualization(AuditBase):
         help_text=_(
             "The width that the visualization should have in pixels once "
             "it's rendered."
-        )
+        ),
     )
     height = models.DecimalField(
         max_digits=6,
@@ -148,7 +155,7 @@ class Visualization(AuditBase):
         help_text=_(
             "The height that the visualization should have in pixels once "
             "it's rendered."
-        )
+        ),
     )
     weight = models.SmallIntegerField(
         blank=True,
@@ -160,7 +167,7 @@ class Visualization(AuditBase):
             "generally be displayed before those with lower weights but "
             "dashboards renders can choose to ignore these values and layout "
             "the visualizations however they see fit."
-        )
+        ),
     )
     metadata = models.JSONField(
         blank=True,
@@ -169,14 +176,14 @@ class Visualization(AuditBase):
             "Metadata and attributes to append to the rendered visualizations."
             " These attributes are added as html element attributes to the "
             "rendered iframe (Should be a dict)."
-        )
+        ),
     )
     is_published = models.BooleanField(
         default=False,
         help_text=_(
             "This flag indicates whether a visualization is ready for "
             "consumption by the stakeholders/users."
-        )
+        ),
     )
 
     # Override the default manager
