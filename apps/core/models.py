@@ -1,3 +1,14 @@
+"""
+This module contains the essential components and classes used through out
+this project. It also defines the core abstractions that describe the essence
+of this project.
+
+Most of the core abstractions defined here are thin skeletons that describe the
+minimal aspects of a domain and are meant to be work together to produce a
+working process. However, these relationships aren't expressed in the
+abstractions(this is due to the limitations of django) but are documented on
+the abstractions themselves.
+"""
 import uuid
 from django.db import models
 from typing import TypeVar
@@ -51,8 +62,8 @@ class AuditBaseManager(BaseManager):
         the given `User`. Returns the created instance.
 
         :param creator: The User who initiated this create action/request.
-        :param args: A tuple of properties to pass to the object being created.
-        :param kwargs: A dict of properties to pass to the object being created.
+        :param kwargs: A dict of properties to pass to the object being
+               created.
         :return: The created instance.
         """
         kwargs.setdefault("created_by", creator)
@@ -61,7 +72,7 @@ class AuditBaseManager(BaseManager):
 
 
 # =============================================================================
-# MODELS
+# BASE MODELS
 # =============================================================================
 
 class BaseModel(models.Model):
@@ -157,16 +168,24 @@ class AuditBase(BaseModel):
         self.save(modifier, update_fields=updatable_fields)
         return self
 
-    class Meta:
+    class Meta(BaseModel.Meta):
         abstract = True
+        get_latest_by = ("-updated_at", "-created_at")
+        ordering = ("-updated_at", "-created_at")
 
 
-class AbstractSource(AuditBase):
+# =============================================================================
+# CORE ABSTRACTIONS
+# =============================================================================
+
+class AbstractDataSource(AuditBase):
     """
     Represents a data source.
 
     This is a data source for the sake of recording keeping(doesn't have to be
     a database, but rather could be the system using the db).
+
+    A source can have multiple extract metadata.
     """
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, default="")
@@ -174,28 +193,135 @@ class AbstractSource(AuditBase):
     def __str__(self) -> str:
         return self.name
 
-    class Meta:
+    class Meta(AuditBase.Meta):
         abstract = True
 
 
-class AbstractMetadata(AuditBase):
-    """Metadata that describes the data to be extracted by clients."""
+class AbstractUploadChunk(AuditBase):
+    """Represents an upload chunk.
+
+    This class is intended to be used together with the
+    `AbstractUploadMetadata` instances. That is, each upload will be composed
+    of multiple chunks.
+    """
+    start_time = models.DateTimeField(
+        auto_now_add=True,
+        editable=False,
+        help_text=_("The time the upload of this chunk commenced.")
+    )
+    finish_time = models.DateTimeField(
+        blank=True,
+        null=True,
+        help_text=_(
+            "The completion time of the upload this chunk. An upload will "
+            "only be considered complete once this value is non-null."
+        )
+    )
+    chunk_index = models.PositiveIntegerField()
+
+    @property
+    def is_complete(self) -> bool:
+        """Return true if this chunk has been uploaded completely.
+
+        For this implementation, a chunk is considered complete if it's finish
+        date is not None.
+        """
+        return getattr(self, "finish_time", None) is not None
+
+    class Meta(AuditBase.Meta):
+        abstract = True
+
+
+class AbstractExtractMetadata(AuditBase):
+    """Metadata that describes the data to be extracted by clients.
+
+    Each extract is only applicable to a single a source.
+    """
     name = models.CharField(max_length=200)
     version = models.CharField(
         max_length=100,
         help_text="The version of this metadata."
     )
     description = models.TextField(blank=True, default="")
-    extract_name = models.CharField(max_length=200, null=True, blank=True)
-    # meta_source = models.ForeignKey()
+    preferred_uploads_name = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        help_text=_(
+            "A name that all uploads relating to this extract should have or "
+            "be grouped by. Note that the final name is dependent on the "
+            "upload metadata implementation in use and thus this is more of a "
+            "hint(to upload metadata implementations) of a suitable name to "
+            "use."
+        )
+    )
 
     def __str__(self) -> str:
         return self.name
 
-    class Meta:
+    class Meta(AuditBase.Meta):
         abstract = True
 
 
-class GenericSource(AbstractSource):
-    """This is a generic data source."""
-    ...
+class AbstractUploadMetadata(AuditBase):
+    """Metadata that describes a data upload by a client."""
+    made_on = models.DateTimeField(auto_now_add=True, editable=False)
+    chunks = models.PositiveIntegerField(
+        default=1,
+        help_text=_("The number of chunks contained in this upload.")
+    )
+
+    @property
+    def is_complete(self) -> bool:
+        """Return true if this upload completed successfully, false otherwise.
+
+        An upload is considered successful if all the chunks for the upload
+        have been uploaded successfully.
+        """
+        raise NotImplementedError("`is_compete` must be implemented.")
+
+    @property
+    def name(self) -> str:
+        """Return a name for this upload."""
+        raise NotImplementedError("`name` must be implemented.")
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta(AuditBase.Meta):
+        abstract = True
+
+
+class AbstractOrgUnitUploadMetadata(AbstractUploadMetadata):  # noqa
+    """Extends `AbstractUploadMetadata` to also capture location data.
+
+    The location is expected to have a code to ease indexing and a human
+    readable name.
+    """
+    org_unit_code = models.CharField(
+        max_length=150,
+        help_text=_(
+            "This is a code representing the location from which this upload "
+            "was made. E.g, an MFL code for facilities in Kenya."
+        )
+    )
+    org_unit_name = models.CharField(
+        max_length=250,
+        help_text=_(
+            "A human-readable name for the location from which this upload "
+            "was made. E.g, the name of a facility."
+        )
+    )
+
+    @property
+    def name(self) -> str:
+        """Return a name for this upload."""
+        return "%s__%s__%s__%s" % (
+            self.org_unit_code,
+            self.org_unit_name,
+            str(self.made_on),
+            str(self.pk)
+        )
+
+    class Meta(AbstractUploadMetadata.Meta):
+        abstract = True
