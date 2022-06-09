@@ -52,9 +52,6 @@ junitxml_report/*
 *.mo
 *.pot
 
-# Django stuff:
-staticfiles/
-
 # Sphinx documentation
 docs/_build/
 
@@ -298,8 +295,8 @@ Session.vim
 tags
 
 ### Project template
-
-fahari/media/
+staticfiles/
+media/
 .pytest_cache/
 .ipython/
 .env
@@ -308,4 +305,3 @@ fahari/media/
 local.sh
 secrets/*
 cloud_sql_proxy
-

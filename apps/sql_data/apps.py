@@ -2,7 +2,7 @@ from django.apps import AppConfig
 from django.utils.translation import gettext_lazy as _
 
 
-class SqlSourcesConfig(AppConfig):
-    name = "apps.sql_sources"
+class SqlDataConfig(AppConfig):
+    name = "apps.sql_data"
     default_auto_field = "django.db.models.BigAutoField"
-    verbose_name = _("Sql Sources")
+    verbose_name = _("Sql Data")

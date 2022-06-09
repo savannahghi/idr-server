@@ -76,10 +76,11 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "apps.app_auth.apps.AppAuthConfig",
+    "apps.common.apps.CommonConfig",
     "apps.core.apps.CoreConfig",
     "apps.frontend.apps.FrontendConfig",
     "apps.misc.apps.MiscConfig",
-    "apps.sql_sources.apps.SqlSourcesConfig",
+    "apps.sql_data.apps.SqlDataConfig",
     "apps.users.apps.UsersConfig"
 ]
 
@@ -297,3 +298,23 @@ LOGGING = {
 ###############################################################################
 
 ADMIN_URL = "admin/"
+
+
+###############################################################################
+# PROJECT SPECIFIC
+###############################################################################
+
+BASE_EXTRACTS_UPLOAD_DIR_NAME = "extracts"
+"""
+This is the name of the root dir where all extracts uploads are stored.
+
+This will typically be: MEDIA_ROOT/BASE_EXTRACTS_UPLOADS_DIR_NAME
+"""
+
+SQL_EXTRACTS_UPLOAD_DIR_NAME = "sql_extracts"
+"""
+This is the name of the root dir where all sql extracts uploads are stored.
+
+This will typically be:
+MEDIA_ROOT/BASE_EXTRACTS_UPLOADS_DIR_NAME/SQL_EXTRACTS_UPLOAD_DIR_NAME
+"""

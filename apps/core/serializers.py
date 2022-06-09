@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from .models import AuditBase, GenericSource
+from .models import AuditBase
 
 
 User = get_user_model()
@@ -84,10 +84,3 @@ class AuditBaseSerializer(BaseSerializer):
 
     class Meta:
         abstract = True
-
-
-class GenericSourceSerializer(AuditBaseSerializer):
-
-    class Meta:
-        model = GenericSource
-        fields = "__all__"

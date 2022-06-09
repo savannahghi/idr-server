@@ -1,7 +1,5 @@
 from django.contrib import admin
 
-from .models import GenericSource
-
 
 class BaseModelAdmin(admin.ModelAdmin):
     """
@@ -47,17 +45,5 @@ class AuditBaseModelAdmin(BaseModelAdmin):
         """
         Persist a model instance to the database.
         """
-        # Get the logged on user
-        user = request.user
-
-        # If we are changing the object, call obj.update and pass the logged
-        # on user
-        # if change:
-        #     obj.update(user)
-        # Otherwise, call obj.save and pass the user
-        obj.save(user)
-
-
-@admin.register(GenericSource)
-class GenericSourceAdmin(AuditBaseModelAdmin):
-    list_display = ("name", "description")
+        # Call obj.save and pass the logged on user
+        obj.save(request.user)
