@@ -23,8 +23,10 @@
                         {% endblock content %}
                     </div>
                 </div>
+                {% block footer %}
+                    {% include "atoms/footer.html" %}
+                {% endblock footer %}
             </div>
-
         </div>
         <a class="scroll-to-top rounded" href="#page-top">
             <i class="fas fa-angle-up"></i>
