@@ -1,0 +1,27 @@
+{
+  "enableTypeIgnoreComments": true,
+  "ignore": [
+    "**/__pycache__/*",
+    "apps/**/migrations/*",
+    "config/*",
+    "node_modules/*",
+    "staticfiles/*"
+  ],
+  "include": [
+    "apps/"
+  ],
+  "pythonVersion": "3.9",
+  "reportConstantRedefinition": "error",
+  "reportDuplicateImport": "error",
+  "reportPrivateUsage": "error",
+  "reportUnusedClass": "warning",
+  "reportUnusedFunction": "warning",
+  "reportUnusedImport": "error",
+  "reportUnusedVariable": "warning",
+  "reportWildcardImportFromLibrary": "warning",
+  "strictDictionaryInference": true,
+  "strictListInference": true,
+  "strictParameterNoneValue": true,
+  "strictSetInference": true,
+  "typeCheckingMode": "basic"
+}

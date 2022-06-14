@@ -23,7 +23,6 @@ from django.views.generic import RedirectView
 
 from apps.frontend.views import HomeView
 
-
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path("api/", include("apps.app_auth.urls")),

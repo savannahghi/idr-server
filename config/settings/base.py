@@ -10,8 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-import environs
 from pathlib import Path
+
+import environs
 
 ###############################################################################
 # READ ENVIRONMENT
@@ -27,6 +28,7 @@ ALLOWED_HOSTS = env.list(
     ]
 )
 DEBUG = env.bool("DJANGO_DEBUG", False)
+DJANGO_LOG_LEVEL = env.str("DJANGO_LOG_LEVEL", default="DEBUG")
 SECRET_KEY = env.str(
     "DJANGO_SECRET_KEY",
     "django-insecure-xlb*ys8xnqwg$b0b04c&=y_z"
@@ -198,7 +200,7 @@ CORS_URLS_REGEX = r"^/api/.*$"
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Africa/Nairobi"
 USE_I18N = True
-USE_L10N = True
+# USE_L10N = True
 USE_TZ = True
 
 
@@ -279,12 +281,15 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s " "%(process)d %(thread)d %(message)s"
+            "format": (
+                "%(levelname)s %(asctime)s %(module)s "
+                "%(process)d %(thread)d %(message)s"
+            )
         }
     },
     "handlers": {
         "console": {
-            "level": "DEBUG",
+            "level": DJANGO_LOG_LEVEL,
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         }

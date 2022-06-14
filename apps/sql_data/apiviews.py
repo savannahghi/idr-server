@@ -10,7 +10,7 @@ from .models import (
     SQLDatabaseSource,
     SQLExtractMetadata,
     SQLUploadChunk,
-    SQLUploadMetadata
+    SQLUploadMetadata,
 )
 from .serializers import (
     DataSourceVersionSerializer,
@@ -18,7 +18,7 @@ from .serializers import (
     SQLDatabaseSerializer,
     SQLExtractMetadataSerializer,
     SQLUploadChunkSerializer,
-    SQLUploadMetadataSerializer
+    SQLUploadMetadataSerializer,
 )
 
 

@@ -1,8 +1,7 @@
 from django.urls import path
-from knox.views import LogoutView, LogoutAllView
+from knox.views import LogoutAllView, LogoutView
 
 from .apiviews import LoginView
-
 
 urlpatterns = [
     path("auth/login/", LoginView.as_view(), name="api_login"),

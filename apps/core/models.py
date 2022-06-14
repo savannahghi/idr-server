@@ -10,10 +10,10 @@ abstractions(this is due to the limitations of django) but are documented on
 the abstractions themselves.
 """
 import uuid
-from django.db import models
 from typing import TypeVar
 
 from django.conf import settings
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 # =============================================================================

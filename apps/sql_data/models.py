@@ -3,17 +3,17 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from apps.core.models import (
-    AbstractExtractMetadata,
-    AuditBase,
     AbstractDataSource,
+    AbstractExtractMetadata,
+    AbstractOrgUnitUploadMetadata,
     AbstractUploadChunk,
-    AbstractOrgUnitUploadMetadata
+    AuditBase,
 )
-
 
 # =============================================================================
 # HELPERS
 # =============================================================================
+
 
 def sql_extracts_upload_to(instance: "SQLUploadChunk", filename: str) -> str:
     ex_meta: SQLExtractMetadata = instance.upload_metadata.extract_metadata
@@ -138,7 +138,7 @@ class SQLUploadMetadata(AbstractOrgUnitUploadMetadata):
         JSON = "application/json", _("JSON")
         MS_EXCEL = "application/vnd.ms-excel", _("MS Excel")
         MS_EXCEL_07 = (
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",  # noqa
             _("MS Excel 2007 and Later")
         )
         PARQUET = "application/vnd.apache-parquet", _("Parquet")

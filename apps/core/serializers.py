@@ -5,7 +5,6 @@ from rest_framework import serializers
 
 from .models import AuditBase
 
-
 User = get_user_model()
 
 
@@ -32,7 +31,7 @@ class AuditBaseSerializer(BaseSerializer):
 
         # Only show audit data to admin users
         user = self.get_user_from_context()
-        if not(user and user.is_staff):
+        if not(user and user.is_staff):  # type: ignore
             for field in ("created_by", "updated_at", "updated_by"):
                 self.fields.pop(field, None)
 
@@ -82,5 +81,5 @@ class AuditBaseSerializer(BaseSerializer):
         validated_data["modifier"] = user
         return instance.update(**validated_data)
 
-    class Meta:
+    class Meta(BaseSerializer.Meta):
         abstract = True

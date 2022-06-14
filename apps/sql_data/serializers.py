@@ -5,7 +5,7 @@ from .models import (
     SQLDatabaseSource,
     SQLExtractMetadata,
     SQLUploadChunk,
-    SQLUploadMetadata
+    SQLUploadMetadata,
 )
 
 

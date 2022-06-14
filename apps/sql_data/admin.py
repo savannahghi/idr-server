@@ -27,7 +27,7 @@ class SQLExtractMetadataAdmin(AuditBaseModelAdmin):
 
 
 @admin.register(SQLUploadChunk)
-class SQLUploadChunk(AuditBaseModelAdmin):
+class SQLUploadChunkAdmin(AuditBaseModelAdmin):
     list_display = (
         "name", "upload_metadata", "chunk_index", "start_time", "finish_time",
         "is_complete"
