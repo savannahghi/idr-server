@@ -1,0 +1,15 @@
+{% load static i18n compress %}
+
+<li class="nav-item active" id="dashboards-nav">
+    <a class="nav-link collapsed" data-toggle="collapse" data-target="#dashboards-menu" href="#" id="dashboards-nav-link">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+    </a>
+    <div id="dashboards-menu" class="collapse show" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded" role="tablist">
+            {% for dashboard in dashboards %}
+                <a class="collapse-item text-truncate {% if forloop.first %} active {% endif %}" data-toggle="tooltip" data-placement="bottom" href="#{{ dashboard.pk }}"  title="{{ dashboard.title }}">{{ dashboard.title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</li>

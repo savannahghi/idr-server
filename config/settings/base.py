@@ -78,6 +78,7 @@ LOCAL_APPS = [
     "apps.app_auth.apps.AppAuthConfig",
     "apps.common.apps.CommonConfig",
     "apps.core.apps.CoreConfig",
+    "apps.dashboards.apps.DashboardsConfig",
     "apps.frontend.apps.FrontendConfig",
     "apps.misc.apps.MiscConfig",
     "apps.sql_data.apps.SqlDataConfig",
@@ -135,7 +136,8 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                'django.contrib.messages.context_processors.messages',
+                "django.contrib.messages.context_processors.messages",
+                "apps.frontend.context_processors.dashboards"
             ],
         },
     },

@@ -26,9 +26,10 @@ from apps.frontend.views import HomeView
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
-    path("api/", include("apps.app_auth.urls")),
     path("accounts/", include("allauth.urls")),
+    path("api/", include("apps.app_auth.urls")),
     path("api/", include("apps.common.urls")),
+    path("api/", include("apps.dashboards.urls")),
     path("api/", include("apps.core.urls")),
     path("api/", include("apps.sql_data.urls")),
     path("misc/", include("apps.misc.urls")),
