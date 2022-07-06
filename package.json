@@ -63,7 +63,7 @@
     "bootstrap4-toggle": "^3.6.1",
     "chart": "^0.1.2",
     "jquery": "^3.6.0",
-    "jquery-validation": "^1.19.4",
+    "jquery-validation": "^1.19.5",
     "jquery.easing": "^1.4.1",
     "js-cookie": "^3.0.1",
     "jszip": "^3.10.0",
