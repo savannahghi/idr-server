@@ -9,13 +9,6 @@ from .models import (
 )
 
 
-class DataSourceVersionSerializer(AuditBaseSerializer):
-
-    class Meta:
-        model = DataSourceVersion
-        fields = "__all__"
-
-
 class NewSQLUploadChunkSerializer(AuditBaseSerializer):
 
     class Meta:
@@ -27,6 +20,14 @@ class SQLDatabaseSerializer(AuditBaseSerializer):
 
     class Meta:
         model = SQLDatabaseSource
+        fields = "__all__"
+
+
+class DataSourceVersionSerializer(AuditBaseSerializer):
+    data_source_detail = SQLDatabaseSerializer(read_only=True, source="data_source")
+
+    class Meta:
+        model = DataSourceVersion
         fields = "__all__"
 
 
