@@ -2,7 +2,6 @@ from rest_framework import mixins, status
 from rest_framework.decorators import action
 from rest_framework.views import Request, Response
 from rest_framework.viewsets import GenericViewSet
-
 from apps.core.apiviews import AuditBaseViewSet
 
 from .models import (
@@ -26,12 +25,14 @@ class DataSourceVersionViewSet(AuditBaseViewSet):
     """Data Source Version API."""
     queryset = DataSourceVersion.objects.all()
     serializer_class = DataSourceVersionSerializer
+    filterset_fields = ['id', 'data_source', 'data_source_version']
 
 
 class SQLDatabaseViewSet(AuditBaseViewSet):
     """SQL Database Sources API."""
     queryset = SQLDatabaseSource.objects.all()
     serializer_class = SQLDatabaseSerializer
+    filterset_fields = ['id', 'name', 'database_name', 'database_vendor']
 
 
 class SQLExtractMetadataViewSet(AuditBaseViewSet):
@@ -40,6 +41,7 @@ class SQLExtractMetadataViewSet(AuditBaseViewSet):
         "applicable_source_versions", "data_source"
     ).all()
     serializer_class = SQLExtractMetadataSerializer
+    filterset_fields = ['id', 'name', 'data_source__database_name', 'version', 'preferred_uploads_name']
 
 
 class SQLUploadChunkViewSet(
