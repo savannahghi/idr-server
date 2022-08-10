@@ -4,8 +4,8 @@ from model_bakery import baker
 from rest_framework.test import APITestCase
 from django.conf import settings
 
-from apps.sql_data.models import SQLUploadMetadata, SQLExtractMetadata, SQLUploadChunk, \
-    DataSourceVersion, sql_extracts_upload_to
+from apps.sql_data.models import SQLUploadMetadata, SQLExtractMetadata, \
+    SQLUploadChunk, DataSourceVersion, sql_extracts_upload_to
 from apps.tests.test_api import LoggedInMixin
 
 pytestmark = pytest.mark.django_db
@@ -16,23 +16,18 @@ fake = Faker()
 class InitializeTestData(LoggedInMixin, APITestCase):
     def setUp(self):
         self.upload_chunk = baker.make(SQLUploadChunk, chunk_content=fake.file_name())
-        self.upload_metadata = baker.make(SQLUploadMetadata)
-        self.extract_metadata = baker.make(SQLExtractMetadata)
         self.data_source_version = baker.make(DataSourceVersion)
+        self.extract_metadata = baker.make(SQLExtractMetadata)
+        self.sql_upload_metadata = baker.make(SQLUploadMetadata, extract_metadata=self.extract_metadata)
 
         super().setUp()
 
     def test_upload_metadata(self):
-        assert SQLExtractMetadata.data_source == self.extract_metadata.data_source.name
-        # assert self.extract_metadata.data_source ==
-        # @property
-        # def data_source_name(self) -> str:
-        #     """Return the name of the source of thus upload."""
-        #     return self.extract_metadata.data_source.name
-        #
+        assert self.extract_metadata.data_source.name == self.sql_upload_metadata.data_source_name
 
     def test_uploaded_chunk_str(self):
         assert str(self.upload_chunk) == str(self.upload_chunk.chunk_index) + "__" + str(self.upload_chunk.id)
+
         sql_upload_chunk = self.upload_chunk
         meta = sql_upload_chunk.upload_metadata.extract_metadata
         extracts_group_name: str = (
