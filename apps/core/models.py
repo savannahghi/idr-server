@@ -10,10 +10,10 @@ abstractions(this is due to the limitations of django) but are documented on
 the abstractions themselves.
 """
 import uuid
-from django.db import models
 from typing import TypeVar
 
 from django.conf import settings
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 # =============================================================================
@@ -27,8 +27,10 @@ BM = TypeVar("BM", bound="BaseModel", covariant=True)
 # QUERY SETS
 # =============================================================================
 
+
 class BaseQuerySet(models.QuerySet[BM]):
     """This is the base `QuerySet` used in the project."""
+
     ...
 
 
@@ -36,8 +38,10 @@ class BaseQuerySet(models.QuerySet[BM]):
 # MANAGERS
 # =============================================================================
 
+
 class BaseManager(models.Manager[BM]):
     """This is the default `Manager` for all models in this project."""
+
     use_for_related_fields = True
     use_in_migrations = True
 
@@ -53,6 +57,7 @@ class BaseManager(models.Manager[BM]):
 
 class AuditBaseManager(BaseManager):
     """This is the default manager for all `AuditBase` models."""
+
     use_for_related_fields = True
     use_in_migrations = True
 
@@ -75,11 +80,13 @@ class AuditBaseManager(BaseManager):
 # BASE MODELS
 # =============================================================================
 
+
 class BaseModel(models.Model):
     """
     This is the base `Model` of the project from which all concrete inherit
     from.
     """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     # Default Manager
@@ -93,13 +100,17 @@ class AuditBase(BaseModel):
     """
     This is the base `Model` from which all auditable models are derived from.
     """
+
     # Instance creation data
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         models.PROTECT,
         related_name="%(app_label)s_%(class)s_created_by",
-        null=True, db_column="created_by", blank=True, editable=False
+        null=True,
+        db_column="created_by",
+        blank=True,
+        editable=False,
     )
     # Instance modification data
     updated_at = models.DateTimeField(auto_now=True, editable=False)
@@ -107,7 +118,10 @@ class AuditBase(BaseModel):
         settings.AUTH_USER_MODEL,
         models.PROTECT,
         related_name="%(app_label)s_%(class)s_updated_by",
-        null=True, db_column="updated_by", blank=True, editable=False
+        null=True,
+        db_column="updated_by",
+        blank=True,
+        editable=False,
     )
     # Default Manager
     objects: AuditBaseManager = AuditBaseManager()
@@ -164,7 +178,7 @@ class AuditBase(BaseModel):
         # TODO: Add support for many to many fields
 
         # Update only the fields provided
-        updatable_fields = (*kwargs.keys(), 'updated_by')
+        updatable_fields = (*kwargs.keys(), "updated_by")
         self.save(modifier, update_fields=updatable_fields)
         return self
 
@@ -178,6 +192,7 @@ class AuditBase(BaseModel):
 # CORE ABSTRACTIONS
 # =============================================================================
 
+
 class AbstractDataSource(AuditBase):
     """
     Represents a data source.
@@ -187,6 +202,7 @@ class AbstractDataSource(AuditBase):
 
     A source can have multiple extract metadata.
     """
+
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, default="")
 
@@ -204,10 +220,11 @@ class AbstractUploadChunk(AuditBase):
     `AbstractUploadMetadata` instances. That is, each upload will be composed
     of multiple chunks.
     """
+
     start_time = models.DateTimeField(
         auto_now_add=True,
         editable=False,
-        help_text=_("The time the upload of this chunk commenced.")
+        help_text=_("The time the upload of this chunk commenced."),
     )
     finish_time = models.DateTimeField(
         blank=True,
@@ -215,7 +232,7 @@ class AbstractUploadChunk(AuditBase):
         help_text=_(
             "The completion time of the upload this chunk. An upload will "
             "only be considered complete once this value is non-null."
-        )
+        ),
     )
     chunk_index = models.PositiveIntegerField()
 
@@ -237,10 +254,10 @@ class AbstractExtractMetadata(AuditBase):
 
     Each extract is only applicable to a single a source.
     """
+
     name = models.CharField(max_length=200)
     version = models.CharField(
-        max_length=100,
-        help_text="The version of this metadata."
+        max_length=100, help_text="The version of this metadata."
     )
     description = models.TextField(blank=True, default="")
     preferred_uploads_name = models.CharField(
@@ -253,7 +270,7 @@ class AbstractExtractMetadata(AuditBase):
             "upload metadata implementation in use and thus this is more of a "
             "hint(to upload metadata implementations) of a suitable name to "
             "use."
-        )
+        ),
     )
 
     def __str__(self) -> str:
@@ -265,10 +282,11 @@ class AbstractExtractMetadata(AuditBase):
 
 class AbstractUploadMetadata(AuditBase):
     """Metadata that describes a data upload by a client."""
+
     made_on = models.DateTimeField(auto_now_add=True, editable=False)
     chunks = models.PositiveIntegerField(
         default=1,
-        help_text=_("The number of chunks contained in this upload.")
+        help_text=_("The number of chunks contained in this upload."),
     )
 
     @property
@@ -298,19 +316,20 @@ class AbstractOrgUnitUploadMetadata(AbstractUploadMetadata):  # noqa
     The location is expected to have a code to ease indexing and a human
     readable name.
     """
+
     org_unit_code = models.CharField(
         max_length=150,
         help_text=_(
             "This is a code representing the location from which this upload "
             "was made. E.g, an MFL code for facilities in Kenya."
-        )
+        ),
     )
     org_unit_name = models.CharField(
         max_length=250,
         help_text=_(
             "A human-readable name for the location from which this upload "
             "was made. E.g, the name of a facility."
-        )
+        ),
     )
 
     @property
@@ -320,7 +339,7 @@ class AbstractOrgUnitUploadMetadata(AbstractUploadMetadata):  # noqa
             self.org_unit_code,
             self.org_unit_name,
             str(self.made_on),
-            str(self.pk)
+            str(self.pk),
         )
 
     class Meta(AbstractUploadMetadata.Meta):

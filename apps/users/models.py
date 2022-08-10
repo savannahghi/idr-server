@@ -3,10 +3,10 @@ import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-
 # =============================================================================
 # MODELS
 # =============================================================================
+
 
 class User(AbstractUser):
     """Default user model."""
@@ -17,7 +17,7 @@ class User(AbstractUser):
         help_text=(
             "When true, the user is able to log in to the main website (and "
             "vice versa)"
-        )
+        ),
     )
     approval_notified = models.BooleanField(
         default=False,

@@ -1,5 +1,4 @@
 from django.urls import include, path
-
 from rest_framework.routers import DefaultRouter
 
 from .apiviews import (
@@ -7,9 +6,8 @@ from .apiviews import (
     SQLDatabaseViewSet,
     SQLExtractMetadataViewSet,
     SQLUploadChunkViewSet,
-    SQLUploadMetadataViewSet
+    SQLUploadMetadataViewSet,
 )
-
 
 router = DefaultRouter()
 router.register("data_source_versions", DataSourceVersionViewSet)
@@ -19,6 +17,4 @@ router.register("sql_upload_chunks", SQLUploadChunkViewSet)
 router.register("sql_upload_metadata", SQLUploadMetadataViewSet)
 
 
-urlpatterns = [
-    path("sql_data/", include(router.urls))
-]
+urlpatterns = [path("sql_data/", include(router.urls))]

@@ -1,12 +1,11 @@
 from .base import *  # noqa
 from .base import env
 
-
 ###############################################################################
 # INSTALLED APPS
 ###############################################################################
 
-INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
+INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS  # noqa
 
 
 ###############################################################################
@@ -40,7 +39,7 @@ LOGGING = {
                 "<module={module} | function={funcName} | line={lineno:d}> - "
                 "{message}"
             ),
-            "style": "{"
+            "style": "{",
         }
     },
     "handlers": {
@@ -53,10 +52,10 @@ LOGGING = {
             "backupCount": 5,
             "class": "logging.handlers.RotatingFileHandler",
             "encoding": "utf-8",
-            "filename": BASE_DIR / "logs" / "idr_server.log",
+            "filename": BASE_DIR / "logs" / "idr_server.log",  # noqa: F405
             "formatter": "verbose",
-            "maxBytes": 1048576  # 1 MB
-        }
+            "maxBytes": 1048576,  # 1 MB
+        },
     },
     "loggers": {
         "django": {
@@ -64,5 +63,5 @@ LOGGING = {
             "level": env.str("DJANGO_LOG_LEVEL", default="INFO"),
             "propagate": True,
         }
-    }
+    },
 }

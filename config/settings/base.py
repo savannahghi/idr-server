@@ -10,8 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-import environs
 from pathlib import Path
+
+import environs
 
 ###############################################################################
 # READ ENVIRONMENT
@@ -23,14 +24,12 @@ ALLOWED_HOSTS = env.list(
     default=[
         ".fahariyajamii.org",
         "idr.fahariyajamii.org",
-        "icdr.fahariyajamii.org"
-    ]
+        "icdr.fahariyajamii.org",
+    ],
 )
 DEBUG = env.bool("DJANGO_DEBUG", False)
-SECRET_KEY = env.str(
-    "DJANGO_SECRET_KEY",
-    "django-insecure-xlb*ys8xnqwg$b0b04c&=y_z"
-)
+DJANGO_LOG_LEVEL = env.str("DJANGO_LOG_LEVEL", default="DEBUG")
+SECRET_KEY = env.str("DJANGO_SECRET_KEY", "django-insecure-xlb*ys8xwb04c&=y_z")
 
 
 ###############################################################################
@@ -72,7 +71,7 @@ THIRD_PARTY_APPS = [
     "knox",
     "rest_framework",
     "rest_framework.authtoken",
-    "django_filters"
+    "django_filters",
 ]
 
 LOCAL_APPS = [
@@ -83,7 +82,7 @@ LOCAL_APPS = [
     "apps.frontend.apps.FrontendConfig",
     "apps.misc.apps.MiscConfig",
     "apps.sql_data.apps.SqlDataConfig",
-    "apps.users.apps.UsersConfig"
+    "apps.users.apps.UsersConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -138,7 +137,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "django.contrib.messages.context_processors.messages",
-                "apps.frontend.context_processors.dashboards"
+                "apps.frontend.context_processors.dashboards",
             ],
         },
     },
@@ -201,7 +200,7 @@ CORS_URLS_REGEX = r"^/api/.*$"
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Africa/Nairobi"
 USE_I18N = True
-USE_L10N = True
+# USE_L10N = True
 USE_TZ = True
 
 
@@ -214,15 +213,13 @@ MEDIA_URL = "/media/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [
-    BASE_DIR / "assets" / "static"
-]
+STATICFILES_DIRS = [BASE_DIR / "assets" / "static"]
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    "compressor.finders.CompressorFinder"
+    "compressor.finders.CompressorFinder",
 ]
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 
 ###############################################################################
@@ -230,10 +227,16 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 ###############################################################################
 
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"  # noqa
+    },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"  # noqa
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"  # noqa
+    },
 ]
 AUTH_USER_MODEL = "users.User"
 AUTHENTICATION_BACKENDS = [
@@ -255,8 +258,7 @@ LOGIN_URL = "account_login"
 ###############################################################################
 
 ACCOUNT_ALLOW_REGISTRATION = env.bool(
-    "DJANGO_ACCOUNT_ALLOW_REGISTRATION",
-    True
+    "DJANGO_ACCOUNT_ALLOW_REGISTRATION", True
 )
 ACCOUNT_AUTHENTICATION_METHOD = "username"
 ACCOUNT_EMAIL_REQUIRED = False
@@ -282,12 +284,15 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s " "%(process)d %(thread)d %(message)s"
+            "format": (
+                "%(levelname)s %(asctime)s %(module)s "
+                "%(process)d %(thread)d %(message)s"
+            )
         }
     },
     "handlers": {
         "console": {
-            "level": "DEBUG",
+            "level": DJANGO_LOG_LEVEL,
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         }

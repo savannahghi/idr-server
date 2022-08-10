@@ -7,7 +7,6 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 from .base import *  # noqa
 from .base import env
 
-
 ###############################################################################
 # READ ENVIRONMENT
 ###############################################################################
@@ -20,8 +19,8 @@ ALLOWED_HOSTS = env.list(
         ".fahariyajamii.org",
         "cbs.fahariyajamii.org",
         "idr.fahariyajamii.org",
-        "icdr.fahariyajamii.org"
-    ]
+        "icdr.fahariyajamii.org",
+    ],
 )
 SECRET_KEY = env.str("DJANGO_SECRET_KEY")
 
@@ -46,7 +45,7 @@ DATABASES = {
         "PORT": env.str("POSTGRES_PORT", None),
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "ATOMIC_REQUESTS": True,
-        "CONN_MAX_AGE": env.int("CONN_MAX_AGE", default=60)
+        "CONN_MAX_AGE": env.int("CONN_MAX_AGE", default=60),
     },
 }
 
@@ -69,12 +68,10 @@ CACHES = {
 
 CSRF_COOKIE_SECURE = True
 SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
-    "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF",
-    default=True
+    "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True
 )
 SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
-    "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS",
-    default=True
+    "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True
 )
 SECURE_HSTS_SECONDS = 518400
 SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=True)
@@ -87,7 +84,7 @@ SESSION_COOKIE_SECURE = True
 # STORAGES
 ###############################################################################
 
-INSTALLED_APPS += ["storages"]
+INSTALLED_APPS += ["storages"]  # noqa: F405
 GS_BUCKET_NAME = env.str("DJANGO_GCP_STORAGE_BUCKET_NAME")
 GS_DEFAULT_ACL = "project-private"
 
@@ -109,7 +106,9 @@ COMPRESS_ENABLED = True
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_URL
 COMPRESS_URL = STATIC_URL  # noqa F405
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_OFFLINE
-COMPRESS_OFFLINE = True  # Offline compression is required when using Whitenoise
+COMPRESS_OFFLINE = (
+    True  # Offline compression is required when using Whitenoise
+)
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_FILTERS
 COMPRESS_FILTERS = {
     "css": [
@@ -130,7 +129,7 @@ LOGGING = {
     "formatters": {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(module)s "
-                      "%(process)d %(thread)d %(message)s"
+            "%(process)d %(thread)d %(message)s"
         }
     },
     "handlers": {
