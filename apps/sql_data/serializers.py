@@ -5,26 +5,26 @@ from .models import (
     SQLDatabaseSource,
     SQLExtractMetadata,
     SQLUploadChunk,
-    SQLUploadMetadata
+    SQLUploadMetadata,
 )
 
 
 class NewSQLUploadChunkSerializer(AuditBaseSerializer):
-
     class Meta:
         model = SQLUploadChunk
         fields = "__all__"
 
 
 class SQLDatabaseSerializer(AuditBaseSerializer):
-
     class Meta:
         model = SQLDatabaseSource
         fields = "__all__"
 
 
 class DataSourceVersionSerializer(AuditBaseSerializer):
-    data_source_detail = SQLDatabaseSerializer(read_only=True, source="data_source")
+    data_source_detail = SQLDatabaseSerializer(
+        read_only=True, source="data_source"
+    )
 
     class Meta:
         model = DataSourceVersion
@@ -34,8 +34,7 @@ class DataSourceVersionSerializer(AuditBaseSerializer):
 class SQLExtractMetadataSerializer(AuditBaseSerializer):
     data_source = SQLDatabaseSerializer(read_only=True)
     applicable_source_versions = DataSourceVersionSerializer(
-        many=True,
-        read_only=True
+        many=True, read_only=True
     )
 
     class Meta:
@@ -44,7 +43,6 @@ class SQLExtractMetadataSerializer(AuditBaseSerializer):
 
 
 class SQLUploadChunkSerializer(NewSQLUploadChunkSerializer):
-
     class Meta(NewSQLUploadChunkSerializer.Meta):
         fields = "__all__"
         read_only_fields = ("upload_metadata",)

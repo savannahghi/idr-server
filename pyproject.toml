@@ -1,0 +1,88 @@
+[tool.black]
+line-length = 79
+target-version = ["py37"]
+
+
+[tool.coverage.html]
+directory = "coverage"
+
+
+[tool.coverage.report]
+exclude_lines = [
+    # Have to re-enable the standard pragma"
+    "pragma: no branch",
+    "pragma: nocover",
+    "pragma: no cover",
+
+    # Don't complain if tests don't hit defensive assertion code:
+    "raise AssertionError",
+    "raise NotImplementedError",
+
+    # Don't complain about abstract methods, they aren't run:
+    '@(abc\.)?abstractmethod'
+]
+show_missing = true
+
+
+[tool.coverage.run]
+branch = true
+omit = [
+    "**/htmlcov/**",
+    ".tox/*",
+    "apps/**/factories/*",
+    "apps/**/factories.py",
+    "apps/**/migrations/*",
+    "apps/**/test*.py",
+    "apps/**/tests/*",
+    "assets/*",
+    "config/*",
+    "docs/*,",
+    "scripts/*",
+]
+plugins = ["django_coverage_plugin"]
+source = ["apps"]
+
+
+[tool.isort]
+extend_skip = "docs"
+extend_skip_glob = ["*/migrations/*", "*/static/CACHE/*"]
+line_length = 79
+multi_line_output = 3
+profile = "black"
+
+
+[tool.pyright]
+enableTypeIgnoreComments = true
+ignore = [
+    "**/__pycache__/*",
+    "apps/**/migrations/*",
+    "config/*",
+    "node_modules/*",
+    "staticfiles/*"
+]
+include = ["apps/"]
+pythonVersion = "3.9"
+reportConstantRedefinition = "error"
+reportDuplicateImport = "error"
+reportPrivateUsage = "error"
+reportUnusedClass = "warning"
+reportUnusedFunction = "warning"
+reportUnusedImport = "error"
+reportUnusedVariable = "warning"
+reportWildcardImportFromLibrary = "warning"
+strictDictionaryInference = true
+strictListInference = true
+strictParameterNoneValue = true
+strictSetInference = true
+typeCheckingMode = "basic"
+
+
+[tool.pytest.ini_options]
+addopts = "--ds=config.settings.test --cov-fail-under=53 --cov --cov-config=pyproject.toml --cov-report=html --cov-report=term-missing -n auto --junitxml='junitxml_report/report.xml' -v --durations=10 --cache-clear --create-db"
+console_output_style = "progress"
+log_cli = 1
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_level = "ERROR"
+norecursedirs = "node_modules venv build env bin .cache .tox"
+python_files = ["*test.py", "test_*.py"]

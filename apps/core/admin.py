@@ -5,6 +5,7 @@ class BaseModelAdmin(admin.ModelAdmin):
     """
     This is the base `ModelAdmin` for this project
     """
+
     ...
 
 
@@ -13,6 +14,7 @@ class AuditBaseModelAdmin(BaseModelAdmin):
     This is the base `ModelAdmin` for all `AuditBaseModel` models in this
     project.
     """
+
     date_hierarchy = "updated_at"
 
     def __init__(self, *args, **kwargs):
@@ -21,7 +23,10 @@ class AuditBaseModelAdmin(BaseModelAdmin):
         #     self.audit_details_fieldset,
         # )
         self.readonly_fields = (
-            "created_at", "created_by", "updated_at", "updated_by"
+            "created_at",
+            "created_by",
+            "updated_at",
+            "updated_by",
         )
 
     @property
@@ -33,12 +38,16 @@ class AuditBaseModelAdmin(BaseModelAdmin):
         :return: a field set of fields that define/hold audit data.
         """
         return (
-            "Audit Details", {
+            "Audit Details",
+            {
                 "classes": ("collapse",),
                 "fields": (
-                    "created_at", "created_by", "updated_at", "updated_by"
-                )
-            }
+                    "created_at",
+                    "created_by",
+                    "updated_at",
+                    "updated_by",
+                ),
+            },
         )
 
     def save_model(self, request, obj, form, change):

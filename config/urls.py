@@ -23,9 +23,9 @@ from django.views.generic import RedirectView
 
 from apps.frontend.views import HomeView
 
-
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
+    path("api/", include("apps.app_auth.urls")),
     path("accounts/", include("allauth.urls")),
     path("api/", include("apps.app_auth.urls")),
     path("api/", include("apps.common.urls")),
@@ -38,18 +38,18 @@ urlpatterns = [
     re_path(
         r"^favicon\.ico$",
         RedirectView.as_view(
-            url=settings.STATIC_URL + "favicon.ico",
-            permanent=True
+            url=settings.STATIC_URL + "favicon.ico", permanent=True
         ),
     ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
-    # Static file serving when using Gunicorn + Uvicorn for local web socket development
+    # Static file serving when using Gunicorn + Uvicorn for local web socket
+    # development.
     urlpatterns += staticfiles_urlpatterns()
     if settings.DEBUG:
-        # This allows the error pages to be debugged during development, just visit
-        # these url in browser to see how these error pages look like.
+        # This allows the error pages to be debugged during development, just
+        # visit these url in browser to see how these error pages look like.
         urlpatterns += [
             path(
                 "400/",

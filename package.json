@@ -1,5 +1,5 @@
 {
-  "name": "idr-server",
+  "name": "idr_server",
   "version": "1.0.0",
   "description": "IDR(Integrated Data Repository) Server is a service that houses metadata for/and receives extracted data from IDR Clients.",
   "main": "index.js",

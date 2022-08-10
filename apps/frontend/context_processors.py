@@ -1,4 +1,5 @@
 from typing import Any, Mapping
+
 from django.http.request import HttpRequest
 
 from apps.dashboards.models import Dashboard, DashboardQuerySet

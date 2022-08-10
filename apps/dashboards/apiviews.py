@@ -6,6 +6,7 @@ from .serializers import DashboardSerializer, VisualizationSerializer
 
 class DashboardViewSet(AuditBaseViewSet):
     """Dashboards API."""
+
     queryset = Dashboard.objects.published()
     serializer_class = DashboardSerializer
 
@@ -17,6 +18,7 @@ class DashboardViewSet(AuditBaseViewSet):
 
 class VisualizationViewSet(AuditBaseViewSet):
     """Visualizations API."""
+
     queryset = Visualization.objects.published()
     serializer_class = VisualizationSerializer
 
