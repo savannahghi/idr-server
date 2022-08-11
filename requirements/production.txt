@@ -15,6 +15,9 @@ googleapis-common-protos~=1.56.4
 grpc-google-iam-v1~=0.12.4
 grpcio-status~=1.47.0
 grpcio~=1.47.0
+google-cloud-pubsub~=2.13.5
+google~=3.0.0
+
 
 
 # Others
