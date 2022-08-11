@@ -173,7 +173,7 @@ class SQLUploadMetadata(AbstractOrgUnitUploadMetadata):
     @property
     def is_complete(self) -> bool:
         # TODO: Add implementation.
-        return False
+        return False  # pragma: no cover
 
     class Meta(AbstractExtractMetadata.Meta):
         verbose_name_plural = "Sql upload metadata"
