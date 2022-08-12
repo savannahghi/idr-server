@@ -11,6 +11,7 @@ env:
   DOCKER_BUILDKIT: 1 # Enable Buildkit and let compose use it to speed up image building
   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
   GOOGLE_APPLICATION_CREDENTIALS: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}"
+  GOOGLE_CLOUD_PROJECT: "${{ secrets.GOOGLE_CLOUD_PROJECT }}"
   POSTGRES_DB: postgres
   POSTGRES_HOST: localhost
   POSTGRES_PASSWORD: postgres
@@ -69,6 +70,11 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install tox tox-gh-actions
         npm ci
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v0
+      with:
+        credentials_json: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}"
 
     - name: Test with tox
       run: tox -r

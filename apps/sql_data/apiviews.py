@@ -7,7 +7,7 @@ from rest_framework.views import Request, Response
 from rest_framework.viewsets import GenericViewSet
 
 from apps.core.apiviews import AuditBaseViewSet
-from apps.pub_sub.core_events import AbstractEventPublisher
+from utils.core_events import AbstractEventPublisher
 
 from .models import (
     DataSourceVersion,
@@ -26,6 +26,8 @@ from .serializers import (
 )
 
 publisher = pubsub_v1.PublisherClient()
+topic_id = "idr_incoming_extracts_metadata"
+project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 class DataSourceVersionViewSet(AuditBaseViewSet):
@@ -80,9 +82,9 @@ class SQLUploadMetadataViewSet(AuditBaseViewSet, AbstractEventPublisher):
     ).all()
     serializer_class = SQLUploadMetadataSerializer
 
-    def publish_event(self, topic_path: str, data):
+    def publish_event(self, topic_path: str, data: bytes):
         future = publisher.publish(topic_path, data)
-        print("Event publish result ", future.result())
+        print("Event publish result id ", future.result())
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -90,10 +92,7 @@ class SQLUploadMetadataViewSet(AuditBaseViewSet, AbstractEventPublisher):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
 
-        project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
-        topic_id = "idr_incoming_extracts_metadata"
         topic_path = publisher.topic_path(project_id, topic_id)
-
         data = {
             "org_unit_name": serializer.validated_data.get("org_unit_name"),
             "org_unit_code": serializer.validated_data.get("org_unit_code"),

@@ -5,7 +5,7 @@ class AbstractEventPublisher(metaclass=ABCMeta):
     """Base class for publish events"""
 
     @abstractmethod
-    def publish_event(self, topic_path: str, data: dict):
+    def publish_event(self, topic_path: str, data: bytes):
         ...
 
 
