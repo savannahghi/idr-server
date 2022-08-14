@@ -82,8 +82,9 @@ class SQLUploadMetadataViewSet(AuditBaseViewSet):
     def start_chunk_upload(self, request: Request, pk) -> Response:
         """Start a new chunk upload."""
         self.check_object_permissions(request, request.user)
+        request.data["upload_metadata"] = str(pk)
         serializer: NewSQLUploadChunkSerializer = self.get_serializer(
-            data={**request.data, "upload_metadata": str(pk)}
+            data=request.data
         )
         if not serializer.is_valid():
             return Response(
