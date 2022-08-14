@@ -12,6 +12,8 @@ django-storages~=1.13
 Django~=4.1
 djangorestframework~=3.13.1
 environs~=9.5.0
+google-auth~=2.10.0
+google-cloud-pubsub==2.13.6
 openpyxl~=3.0.10
 psycopg2~=2.9.3
 pyexcel-io~=0.6.6
