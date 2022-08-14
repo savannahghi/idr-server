@@ -26,11 +26,11 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libpq-dev postgis gdal-bin libgdal-dev
 
 # Requirements are installed here to ensure they will be cached.
-COPY ./requirements.txt .
+COPY ./requirements .
 
 # Create Python Dependency and Sub-Dependency Wheels.
 RUN pip wheel --wheel-dir /usr/src/app/wheels  \
-  -r requirements.txt
+  -r ${BUILD_ENVIRONMENT}.txt
 
 
 # Python 'run' stage
