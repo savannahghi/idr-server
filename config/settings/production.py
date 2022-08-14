@@ -95,7 +95,7 @@ GS_DEFAULT_ACL = "project-private"
 
 DEFAULT_FILE_STORAGE = "utils.storages.MediaRootGoogleCloudStorage"
 MEDIA_URL = "https://storage.googleapis.com/%s/media/" % GS_BUCKET_NAME
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 
 ###############################################################################
