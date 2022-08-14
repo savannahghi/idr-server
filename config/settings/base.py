@@ -221,6 +221,8 @@ STATICFILES_FINDERS = [
 ]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
+WHITENOISE_MANIFEST_STRICT = False
+
 
 ###############################################################################
 # AUTH AND PASSWORDS

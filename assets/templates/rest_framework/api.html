@@ -1,0 +1,9 @@
+<!--Customize DRF Browsable API -->
+{% extends "rest_framework/base.html" %}
+{% load static i18n compress %}
+
+{% block bootstrap_theme %}
+    {% compress css %}
+        <link rel="stylesheet" href="{% static 'css/bootstrap-bootswatch-themes/yeti-theme.min.css' %}" type="text/css">
+    {% endcompress %}
+{% endblock %}
