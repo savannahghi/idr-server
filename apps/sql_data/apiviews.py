@@ -1,13 +1,9 @@
-import os
-
-from google.cloud import pubsub_v1
 from rest_framework import mixins, status
 from rest_framework.decorators import action
 from rest_framework.views import Request, Response
 from rest_framework.viewsets import GenericViewSet
 
 from apps.core.apiviews import AuditBaseViewSet
-from utils.core_events import AbstractEventPublisher
 
 from .models import (
     DataSourceVersion,
@@ -25,10 +21,6 @@ from .serializers import (
     SQLUploadChunkSerializer,
     SQLUploadMetadataSerializer,
 )
-
-publisher = pubsub_v1.PublisherClient()
-topic_id = "idr_incoming_extracts_metadata"
-project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 class DataSourceVersionViewSet(AuditBaseViewSet):
@@ -75,41 +67,13 @@ class SQLUploadChunkViewSet(
     serializer_class = SQLUploadChunkSerializer
 
 
-class SQLUploadMetadataViewSet(AuditBaseViewSet, AbstractEventPublisher):
+class SQLUploadMetadataViewSet(AuditBaseViewSet):
     """SQL Upload Metadata API."""
 
     queryset = SQLUploadMetadata.objects.prefetch_related(
         "upload_chunks"
     ).all()
     serializer_class = SQLUploadMetadataSerializer
-
-    def publish_event(self, topic_path: str, data: bytes):
-        future = publisher.publish(topic_path, data)
-        print("Event publish result id ", future.result())
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-
-        topic_path = publisher.topic_path(project_id, topic_id)
-        data = {
-            "org_unit_name": serializer.validated_data.get("org_unit_name"),
-            "org_unit_code": serializer.validated_data.get("org_unit_code"),
-            "content_type": serializer.validated_data.get("content_type"),
-            "extract_metadata": serializer.validated_data.get(
-                "extract_metadata"
-            ),
-            "chunks": serializer.validated_data.get("chunks"),
-        }
-
-        # publish metadata upload success event
-        self.publish_event(topic_path, str(data).encode("utf-8"))
-
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
 
     @action(
         detail=True,
