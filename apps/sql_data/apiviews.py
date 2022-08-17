@@ -118,7 +118,6 @@ class SQLUploadMetadataViewSet(AuditBaseViewSet, AbstractEventPublisher):
     def start_chunk_upload(self, request: Request, pk) -> Response:
         """Start a new chunk upload."""
         self.check_object_permissions(request, request.user)
-        request.data["upload_metadata"] = str(pk)
         serializer: NewSQLUploadChunkSerializer = self.get_serializer(
             data=request.data
         )
@@ -127,6 +126,5 @@ class SQLUploadMetadataViewSet(AuditBaseViewSet, AbstractEventPublisher):
                 serializer.errors, status=status.HTTP_400_BAD_REQUEST
             )
 
-        serializer.save()
-
+        serializer.save(upload_metadata=self.get_object())
         return Response(serializer.data, status=status.HTTP_201_CREATED)
