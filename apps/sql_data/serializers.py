@@ -12,7 +12,8 @@ from .models import (
 class NewSQLUploadChunkSerializer(AuditBaseSerializer):
     class Meta:
         model = SQLUploadChunk
-        fields = "__all__"
+        fields = ("chunk_index", "chunk_content", "upload_metadata")
+        read_only_fields = ("upload_metadata",)
 
 
 class SQLDatabaseSerializer(AuditBaseSerializer):
