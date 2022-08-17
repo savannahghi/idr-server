@@ -69,3 +69,4 @@ class SQLUploadMetadataSerializer(AuditBaseSerializer):
     class Meta:
         model = SQLUploadMetadata
         fields = "__all__"
+        read_only_fields = ("finish_time",)

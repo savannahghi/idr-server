@@ -17,13 +17,9 @@ from apps.core.models import (
 
 
 def sql_extracts_upload_to(instance: "SQLUploadChunk", filename: str) -> str:
-    ex_meta: SQLExtractMetadata = instance.upload_metadata.extract_metadata
-    extracts_group_name: str = ex_meta.preferred_uploads_name or ex_meta.name
-    return "%s/%s/%s/%s/%d__%s" % (
-        settings.BASE_EXTRACTS_UPLOAD_DIR_NAME,
-        settings.SQL_EXTRACTS_UPLOAD_DIR_NAME,
-        extracts_group_name,
-        instance.upload_metadata.name,
+    upload_meta: SQLUploadMetadata = instance.upload_metadata
+    return "%s/%d__%s" % (
+        upload_meta.upload_data_dir,
         instance.chunk_index,
         str(instance.pk),
     )
@@ -175,9 +171,50 @@ class SQLUploadMetadata(AbstractOrgUnitUploadMetadata):
         """Return the name of the source of thus upload."""
         return self.extract_metadata.data_source.name
 
+    @property
+    def upload_data_dir(self) -> str:
+        ex_meta: SQLExtractMetadata = self.extract_metadata
+        extracts_group_name: str = (
+            ex_meta.preferred_uploads_name or ex_meta.name
+        )
+        return "%s/%s/%s/%s/%s__%s/" % (
+            settings.BASE_EXTRACTS_UPLOAD_DIR_NAME,
+            settings.SQL_EXTRACTS_UPLOAD_DIR_NAME,
+            extracts_group_name,
+            "%s__%s" % (self.org_unit_code, self.org_unit_name),
+            str(self.id),
+            str(self.start_time),
+        )
+
     def mark_as_complete(self, user=None) -> None:
         self.update(modifier=user, finish_time=timezone.now())
-        # TODO: Add an action to notify interested parties.
+        # TODO: This should be replaced with the observer pattern.
+        self._publish_to_pubsub()
+
+    def _publish_to_pubsub(self) -> None:
+        # TODO: Implement this functionality properly and DELETE this!!!
+        import os
+
+        from google.cloud import pubsub_v1
+
+        data = {
+            "org_unit_code": self.org_unit_code,
+            "org_unit_name": self.org_unit_name,
+            "content_type": self.content_type,
+            "extract_metadata": str(self.extract_metadata.id),
+            "extract_type": self.extract_metadata.name,
+            "chunks_count": self.chunks_count,
+            "upload_id": str(self.id),
+            "uploads_data_dir": self.upload_data_dir,
+            "start_time": str(self.start_time),
+            "finish_time": str(self.finish_time),
+        }
+
+        publisher = pubsub_v1.PublisherClient()
+        topic_id = "idr_incoming_extracts_metadata"
+        project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+        topic_path = publisher.topic_path(project_id, topic_id)
+        publisher.publish(topic_path, str(data).encode("utf-8"))
 
     class Meta(AbstractExtractMetadata.Meta):
         verbose_name_plural = "Sql upload metadata"
