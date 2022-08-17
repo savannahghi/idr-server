@@ -24,7 +24,7 @@ class MarkUploadMetaAsCompleteSerializer(serializers.Serializer):
 class NewSQLUploadChunkSerializer(AuditBaseSerializer):
     class Meta:
         model = SQLUploadChunk
-        fields = ("chunk_index", "chunk_content", "upload_metadata")
+        fields = ("id", "chunk_index", "chunk_content", "upload_metadata")
         read_only_fields = ("upload_metadata",)
 
 
