@@ -221,29 +221,7 @@ class AbstractUploadChunk(AuditBase):
     of multiple chunks.
     """
 
-    start_time = models.DateTimeField(
-        auto_now_add=True,
-        editable=False,
-        help_text=_("The time the upload of this chunk commenced."),
-    )
-    finish_time = models.DateTimeField(
-        blank=True,
-        null=True,
-        help_text=_(
-            "The completion time of the upload this chunk. An upload will "
-            "only be considered complete once this value is non-null."
-        ),
-    )
     chunk_index = models.PositiveIntegerField()
-
-    @property
-    def is_complete(self) -> bool:
-        """Return true if this chunk has been uploaded completely.
-
-        For this implementation, a chunk is considered complete if it's finish
-        date is not None.
-        """
-        return getattr(self, "finish_time", None) is not None
 
     class Meta(AuditBase.Meta):
         abstract = True
@@ -283,25 +261,58 @@ class AbstractExtractMetadata(AuditBase):
 class AbstractUploadMetadata(AuditBase):
     """Metadata that describes a data upload by a client."""
 
-    made_on = models.DateTimeField(auto_now_add=True, editable=False)
-    chunks = models.PositiveIntegerField(
-        default=1,
-        help_text=_("The number of chunks contained in this upload."),
+    start_time = models.DateTimeField(
+        auto_now_add=True,
+        editable=False,
+        help_text=_("The time that this upload commenced."),
     )
+    finish_time = models.DateTimeField(
+        blank=True,
+        null=True,
+        help_text=_(
+            "The completion time of this upload this. An upload will only be "
+            "considered complete once this value is non-null."
+        ),
+    )
+
+    @property
+    def chunks_count(self) -> int:
+        """Return the number of chunks contained by this upload.
+
+        :return: The number of chunks contained by this upload.
+        """
+        raise NotImplementedError("`chunks_count` must be implemented.")
 
     @property
     def is_complete(self) -> bool:
         """Return true if this upload completed successfully, false otherwise.
 
-        An upload is considered successful if all the chunks for the upload
-        have been uploaded successfully.
+        The default implementation considers any upload whose ``finish_time``
+        property is not ``None`` as complete.
+
+        :returns: True if this upload was successful, False otherwise.
         """
-        raise NotImplementedError("`is_compete` must be implemented.")
+        return getattr(self, "finish_time", None) is not None
 
     @property
     def name(self) -> str:
         """Return a name for this upload."""
         raise NotImplementedError("`name` must be implemented.")
+
+    def mark_as_complete(self, user=None) -> None:
+        """Mark this upload as complete.
+
+        After a successful call to this method, no more chunks should be
+        created for this upload. The `finish_time` field for this upload should
+        also be set on this method. Multiple calls to this method should return
+        cleanly even though only the first(successful) call should have any
+        effect.
+
+        :param user: The user performing this action. This value is optional.
+
+        :return: None.
+        """
+        raise NotImplementedError("'mark_as_complete' must be implemented.")
 
     def __str__(self) -> str:
         return self.name
@@ -338,7 +349,7 @@ class AbstractOrgUnitUploadMetadata(AbstractUploadMetadata):  # noqa
         return "%s__%s__%s__%s" % (
             self.org_unit_code,
             self.org_unit_name,
-            str(self.made_on),
+            str(self.start_time),
             str(self.pk),
         )
 

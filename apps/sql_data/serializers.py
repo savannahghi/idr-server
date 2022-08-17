@@ -1,3 +1,5 @@
+from rest_framework import serializers
+
 from apps.core.serializers import AuditBaseSerializer
 
 from .models import (
@@ -7,6 +9,16 @@ from .models import (
     SQLUploadChunk,
     SQLUploadMetadata,
 )
+
+
+class MarkUploadMetaAsCompleteSerializer(serializers.Serializer):
+    """Serializer used by the"""
+
+    def create(self, validated_data):
+        raise NotImplementedError("Not needed. Should never be called.")
+
+    def update(self, instance, validated_data):
+        raise NotImplementedError("Not needed. Should never be called.")
 
 
 class NewSQLUploadChunkSerializer(AuditBaseSerializer):
@@ -50,6 +62,8 @@ class SQLUploadChunkSerializer(NewSQLUploadChunkSerializer):
 
 
 class SQLUploadMetadataSerializer(AuditBaseSerializer):
+    chunks_count = serializers.IntegerField(read_only=True)
+    is_complete = serializers.BooleanField(read_only=True)
     upload_chunks = SQLUploadChunkSerializer(many=True, read_only=True)
 
     class Meta:

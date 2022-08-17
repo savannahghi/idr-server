@@ -32,9 +32,6 @@ class SQLUploadChunkAdmin(AuditBaseModelAdmin):
         "name",
         "upload_metadata",
         "chunk_index",
-        "start_time",
-        "finish_time",
-        "is_complete",
     )
 
 
@@ -43,7 +40,8 @@ class SQLUploadMetadataAdmin(AuditBaseModelAdmin):
     list_display = (
         "name",
         "data_source_name",
-        "made_on",
-        "chunks",
+        "chunks_count",
+        "start_time",
+        "finish_time",
         "is_complete",
     )

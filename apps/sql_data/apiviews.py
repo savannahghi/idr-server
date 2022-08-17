@@ -18,6 +18,7 @@ from .models import (
 )
 from .serializers import (
     DataSourceVersionSerializer,
+    MarkUploadMetaAsCompleteSerializer,
     NewSQLUploadChunkSerializer,
     SQLDatabaseSerializer,
     SQLExtractMetadataSerializer,
@@ -112,11 +113,22 @@ class SQLUploadMetadataViewSet(AuditBaseViewSet, AbstractEventPublisher):
 
     @action(
         detail=True,
+        methods=["PATCH"],
+        serializer_class=MarkUploadMetaAsCompleteSerializer,
+    )
+    def mark_as_complete(self, request: Request, pk) -> Response:
+        """Mark this upload metadata as complete."""
+        upload_meta: SQLUploadMetadata = self.get_object()
+        upload_meta.mark_as_complete(user=request.user)
+        return Response(status=status.HTTP_200_OK)
+
+    @action(
+        detail=True,
         methods=["POST"],
         serializer_class=NewSQLUploadChunkSerializer,
     )
     def start_chunk_upload(self, request: Request, pk) -> Response:
-        """Start a new chunk upload."""
+        """Start a new chunk upload for this upload metadata."""
         self.check_object_permissions(request, request.user)
         serializer: NewSQLUploadChunkSerializer = self.get_serializer(
             data=request.data
