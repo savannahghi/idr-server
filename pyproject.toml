@@ -78,7 +78,7 @@ typeCheckingMode = "basic"
 
 
 [tool.pytest.ini_options]
-addopts = "--ds=config.settings.test --cov-fail-under=90 --cov --cov-config=pyproject.toml --cov-report=html --cov-report=term-missing -n auto --junitxml='junitxml_report/report.xml' -v --durations=10 --cache-clear --create-db"
+addopts = "--ds=config.settings.test --cov-fail-under=85 --cov --cov-config=pyproject.toml --cov-report=html --cov-report=term-missing -n auto --junitxml='junitxml_report/report.xml' -v --durations=10 --cache-clear --create-db"
 console_output_style = "progress"
 log_cli = 1
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"

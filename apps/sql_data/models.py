@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from apps.core.models import (
@@ -166,14 +167,17 @@ class SQLUploadMetadata(AbstractOrgUnitUploadMetadata):
     )
 
     @property
+    def chunks_count(self) -> int:
+        return self.upload_chunks.count()  # noqa
+
+    @property
     def data_source_name(self) -> str:
         """Return the name of the source of thus upload."""
         return self.extract_metadata.data_source.name
 
-    @property
-    def is_complete(self) -> bool:
-        # TODO: Add implementation.
-        return False  # pragma: no cover
+    def mark_as_complete(self, user=None) -> None:
+        self.update(modifier=user, finish_time=timezone.now())
+        # TODO: Add an action to notify interested parties.
 
     class Meta(AbstractExtractMetadata.Meta):
         verbose_name_plural = "Sql upload metadata"
