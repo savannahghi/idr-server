@@ -211,7 +211,7 @@ class SQLUploadMetadata(AbstractOrgUnitUploadMetadata):
         }
 
         publisher = pubsub_v1.PublisherClient()
-        topic_id = "idr_incoming_extracts_metadata"
+        topic_id = os.getenv("PUB_SUB_TOPIC")
         project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
         topic_path = publisher.topic_path(project_id, topic_id)
         publisher.publish(topic_path, str(data).encode("utf-8"))
