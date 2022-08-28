@@ -1,19 +1,24 @@
 from django.urls import reverse
 from faker import Faker
 from model_bakery import baker
-from rest_framework.test import APIRequestFactory, APITestCase
+from rest_framework.test import (
+    APIRequestFactory,
+    APITestCase,
+    force_authenticate,
+)
 
 from apps.common.tests.test_common import LoggedInMixin
+from apps.dashboards.apiviews import DashboardViewSet, VisualizationViewSet
 from apps.dashboards.models import Dashboard, Visualization
 
 fake = Faker()
-factory = APIRequestFactory()
 
 
 class TestVisualizationViewSet(LoggedInMixin, APITestCase):
     def setUp(self):
-        self.visualization = baker.make(Visualization)
         super().setUp()
+        self.factory = APIRequestFactory()
+        self.visualization = baker.make(Visualization)
 
     def test_create(self):
         data = {
@@ -35,9 +40,20 @@ class TestVisualizationViewSet(LoggedInMixin, APITestCase):
         response = self.client.get(url)
         assert response.status_code == 200
 
-    def test_get_all(self):
+    def test_list_view(self):
         url = reverse("visualization-list")
         response = self.client.get(url)
+        assert response.status_code == 200
+
+    def test_list_view_as_non_staff(self):
+        request = self.factory.get(
+            reverse("visualization-list"),
+        )
+        request.user = self.user
+        request.user.is_staff = False
+        view = VisualizationViewSet.as_view(actions={"get": "list"})
+        force_authenticate(request, user=self.user)
+        response = view(request)
         assert response.status_code == 200
 
     def test_update(self):
@@ -55,8 +71,9 @@ class TestVisualizationViewSet(LoggedInMixin, APITestCase):
 
 class TestDashboardViewSet(LoggedInMixin, APITestCase):
     def setUp(self):
-        self.dashboard = baker.make(Dashboard)
         super().setUp()
+        self.factory = APIRequestFactory()
+        self.dashboard = baker.make(Dashboard)
 
     def test_create(self):
         data = {
@@ -76,9 +93,20 @@ class TestDashboardViewSet(LoggedInMixin, APITestCase):
         response = self.client.get(url)
         assert response.status_code == 200
 
-    def test_get_all(self):
+    def test_list_view(self):
         url = reverse("dashboard-list")
         response = self.client.get(url)
+        assert response.status_code == 200
+
+    def test_list_view_as_non_staff(self):
+        request = self.factory.get(
+            reverse("dashboard-list"),
+        )
+        request.user = self.user
+        request.user.is_staff = False
+        view = DashboardViewSet.as_view(actions={"get": "list"})
+        force_authenticate(request, user=self.user)
+        response = view(request)
         assert response.status_code == 200
 
     def test_update(self):

@@ -32,6 +32,15 @@ class TestSQLUploadChunkViewSet(LoggedInMixin, APITestCase):
         response = self.client.patch(url, {"chunk-index": 4})
         assert response.status_code == 200
 
+    def test_start_chunk_upload_fail(self):
+        data = {"bad_data": 4}
+        fake_data = baker.make(SQLUploadChunk)
+        url = reverse(
+            "sqluploadmetadata-start-chunk-upload", kwargs={"pk": fake_data.id}
+        )
+        response = self.client.post(url, data)
+        assert response.status_code == 400
+
 
 class TestSQLUploadMetadataViewSet(LoggedInMixin, APITestCase):
     def setUp(self):
@@ -46,3 +55,12 @@ class TestSQLUploadMetadataViewSet(LoggedInMixin, APITestCase):
         )
         response = self.client.post(url, data, format="json")
         assert response.status_code == 201
+
+    def test_upload_completion(self):
+        data = {"chunk_index": 1}
+        url = reverse(
+            "sqluploadmetadata-mark-as-complete",
+            kwargs={"pk": self.upload_metadata.pk},
+        )
+        response = self.client.patch(url, data, format="json")
+        assert response.status_code == 200
