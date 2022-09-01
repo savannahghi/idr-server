@@ -193,6 +193,8 @@ class SQLUploadMetadata(AbstractOrgUnitUploadMetadata):
 
     def _publish_to_pubsub(self) -> None:
         # TODO: Implement this functionality properly and DELETE this!!!
+        import io
+        import json
         import os
 
         from google.cloud import pubsub_v1
@@ -209,12 +211,19 @@ class SQLUploadMetadata(AbstractOrgUnitUploadMetadata):
             "start_time": str(self.start_time),
             "finish_time": str(self.finish_time),
         }
-
+        message_payload = io.BytesIO()
+        json.dump(
+            data,
+            message_payload,
+            ensure_ascii=True,
+            check_circular=True,
+            skipkeys=True,
+        )
         publisher = pubsub_v1.PublisherClient()
         topic_id = os.getenv("PUB_SUB_TOPIC")
         project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
         topic_path = publisher.topic_path(project_id, topic_id)
-        publisher.publish(topic_path, str(data).encode("utf-8"))
+        publisher.publish(topic_path, message_payload.getvalue())
 
     class Meta(AbstractExtractMetadata.Meta):
         verbose_name_plural = "Sql upload metadata"
