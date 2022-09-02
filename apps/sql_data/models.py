@@ -193,37 +193,31 @@ class SQLUploadMetadata(AbstractOrgUnitUploadMetadata):
 
     def _publish_to_pubsub(self) -> None:
         # TODO: Implement this functionality properly and DELETE this!!!
-        import io
         import json
         import os
 
         from google.cloud import pubsub_v1
 
-        data = {
-            "org_unit_code": self.org_unit_code,
-            "org_unit_name": self.org_unit_name,
-            "content_type": self.content_type,
-            "extract_metadata": str(self.extract_metadata.id),
-            "extract_type": self.extract_metadata.name,
-            "chunks_count": self.chunks_count,
-            "upload_id": str(self.id),
-            "uploads_data_dir": self.upload_data_dir,
-            "start_time": str(self.start_time),
-            "finish_time": str(self.finish_time),
-        }
-        message_payload = io.BytesIO()
-        json.dump(
-            data,
-            message_payload,
-            ensure_ascii=True,
+        message_payload = json.dumps(
+            obj={
+                "org_unit_code": self.org_unit_code,
+                "org_unit_name": self.org_unit_name,
+                "content_type": self.content_type,
+                "extract_metadata": str(self.extract_metadata.id),
+                "extract_type": self.extract_metadata.name,
+                "chunks_count": self.chunks_count,
+                "upload_id": str(self.id),
+                "uploads_data_dir": self.upload_data_dir,
+                "start_time": str(self.start_time),
+                "finish_time": str(self.finish_time),
+            },
             check_circular=True,
-            skipkeys=True,
         )
         publisher = pubsub_v1.PublisherClient()
         topic_id = os.getenv("PUB_SUB_TOPIC")
         project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
         topic_path = publisher.topic_path(project_id, topic_id)
-        publisher.publish(topic_path, message_payload.getvalue())
+        publisher.publish(topic_path, message_payload.encode("utf-8"))
 
     class Meta(AbstractExtractMetadata.Meta):
         verbose_name_plural = "Sql upload metadata"
