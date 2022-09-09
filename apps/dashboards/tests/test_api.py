@@ -45,6 +45,17 @@ class TestVisualizationViewSet(LoggedInMixin, APITestCase):
         response = self.client.get(url)
         assert response.status_code == 200
 
+    def test_list_view_as_staff(self):
+        request = self.factory.get(
+            reverse("visualization-list"),
+        )
+        request.user = self.user
+        request.user.is_staff = True
+        view = VisualizationViewSet.as_view(actions={"get": "list"})
+        response = view(request)
+        assert response.data["count"] > 0
+        assert response.status_code == 200
+
     def test_list_view_as_non_staff(self):
         request = self.factory.get(
             reverse("visualization-list"),
@@ -52,8 +63,8 @@ class TestVisualizationViewSet(LoggedInMixin, APITestCase):
         request.user = self.user
         request.user.is_staff = False
         view = VisualizationViewSet.as_view(actions={"get": "list"})
-        force_authenticate(request, user=self.user)
         response = view(request)
+        assert response.data["count"] >= 0
         assert response.status_code == 200
 
     def test_update(self):
@@ -98,6 +109,18 @@ class TestDashboardViewSet(LoggedInMixin, APITestCase):
         response = self.client.get(url)
         assert response.status_code == 200
 
+    def test_list_view_as_staff(self):
+        request = self.factory.get(
+            reverse("dashboard-list"),
+        )
+        request.user = self.user
+        request.user.is_staff = True
+        view = DashboardViewSet.as_view(actions={"get": "list"})
+        force_authenticate(request, user=self.user)
+        response = view(request)
+        assert response.data["count"] > 0
+        assert response.status_code == 200
+
     def test_list_view_as_non_staff(self):
         request = self.factory.get(
             reverse("dashboard-list"),
@@ -107,6 +130,7 @@ class TestDashboardViewSet(LoggedInMixin, APITestCase):
         view = DashboardViewSet.as_view(actions={"get": "list"})
         force_authenticate(request, user=self.user)
         response = view(request)
+        assert response.data["count"] >= 0
         assert response.status_code == 200
 
     def test_update(self):

@@ -11,11 +11,11 @@ pytestmark = pytest.mark.django_db
 fake = Faker()
 
 
-class InitializeTestData(LoggedInMixin, APITestCase):
+class TestDashboardModels(LoggedInMixin, APITestCase):
     def setUp(self):
+        super().setUp()
         self.dashboard = baker.make(Dashboard)
         self.visualization = baker.make(Visualization)
-        super().setUp()
 
     def test_dashboard_str(self):
         assert str(self.dashboard) == str(self.dashboard.title)

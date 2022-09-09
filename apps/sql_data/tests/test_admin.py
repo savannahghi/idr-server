@@ -13,12 +13,12 @@ pytestmark = pytest.mark.django_db
 fake = Faker()
 
 
-class InitializeTestData(LoggedInMixin, APITestCase):
+class TestCoreModels(LoggedInMixin, APITestCase):
     def setUp(self):
+        super().setUp()
         self.factory = APIRequestFactory()
         self.data_source_version = baker.make(DataSourceVersion)
         self.sql_data_source = baker.make(SQLDatabaseSource)
-        super().setUp()
 
     def test_audit_base_model_audit_field_set_property(self):
         admin = DataSourceVersionAdmin(

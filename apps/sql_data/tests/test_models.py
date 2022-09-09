@@ -17,8 +17,9 @@ pytestmark = pytest.mark.django_db
 fake = Faker()
 
 
-class InitializeTestData(LoggedInMixin, APITestCase):
+class TestSqlDataModels(LoggedInMixin, APITestCase):
     def setUp(self):
+        super().setUp()
         self.data_source_version = baker.make(DataSourceVersion)
         self.extract_metadata = baker.make(SQLExtractMetadata)
         self.sql_upload_metadata = baker.make(
@@ -29,8 +30,6 @@ class InitializeTestData(LoggedInMixin, APITestCase):
             upload_metadata=self.sql_upload_metadata,
             chunk_content=fake.file_name(),
         )
-
-        super().setUp()
 
     def test_upload_metadata(self):
         assert (

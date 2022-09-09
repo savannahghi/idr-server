@@ -27,4 +27,5 @@ class AuditBaseModelTest(TestCase):
             database_vendor="MySQL",
         )
         sql_upload_metadata.save(user=User.objects.get(pk=self.user.pk))
-        assert sql_upload_metadata.pk is not None
+        assert sql_upload_metadata.created_by == self.user
+        assert sql_upload_metadata.updated_by is None

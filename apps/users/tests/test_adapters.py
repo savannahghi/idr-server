@@ -10,16 +10,16 @@ pytestmark = pytest.mark.django_db
 fake = Faker()
 
 
-class InitializeTestData(LoggedInMixin, APITestCase):
+class TestAdapters(LoggedInMixin, APITestCase):
     def setUp(self):
-        self.factory = APIRequestFactory()
         super().setUp()
+        self.factory = APIRequestFactory()
 
     def test_account_adapter(self):
         request = self.factory.request()
         request.user = self.user
         response = AccountAdapter.is_open_for_signup(self, request)
-        assert response is not None
+        assert response is True
 
     def test_social_account_adapter(self):
         request = self.factory.request()
@@ -27,4 +27,4 @@ class InitializeTestData(LoggedInMixin, APITestCase):
         response = SocialAccountAdapter.is_open_for_signup(
             self, request, sociallogin=None
         )
-        assert response is not None
+        assert response is True
