@@ -33,37 +33,3 @@ function switchDashboards(event) {
     // Hide the menu after selection
     $("#accordionSidebar.toggled #dashboards-menu").removeClass("show");
 }
-
-
-(function($) {
-    /* Google Analytics */
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag("js", new Date());
-    gtag("config", "G-WW2W29ZMTZ");
-
-    // Auto-collapse open menus in responsive mode
-    $(".navbar-collapse a").click(function() {
-        $(".navbar-collapse").collapse("hide");
-    });
-
-    // Initialize the select2 plugin
-    $("select").each(function() {
-        $(this).select2({
-            allowClear: typeof $(this).data("allow-clear") !== "undefined" ? Boolean($(this).data("allow-clear")) : Boolean($(this).attr("multiple")),
-            closeOnSelect: !$(this).attr("multiple"),
-            placeholder: typeof $(this).data("placeholder") !== "undefined" ? $(this).data("placeholder") : {"id": `select2__placeholder__id__{$(this).attr('id')}`, "placeholder": `Select ${getElementLabelText(this)}`},
-            theme: "bootstrap4",
-            width: $(this).data("width") ? $(this).data("width") : $(this).hasClass("w-100") ? "100%" : "resolve",
-        });
-    });
-
-    // Initialize the date picker plugin
-    $(".datepicker").datepicker();
-
-    // Add a dashboard selection change listener
-    $("#dashboards-menu > div > a").click(switchDashboards);
-})(jQuery);
