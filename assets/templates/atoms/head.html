@@ -29,13 +29,18 @@
     <link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css" rel="stylesheet">
     {% endblock css %}
 
+
     {% block javascript %}
     {% compress js %}
     <script defer src="{% static 'js/vendors.min.js' %}"></script>
     <script defer src="{% static 'js/sb-admin-2.min.js' %}"></script>
     <script defer src="{% static 'js/project.min.js' %}"></script>
     {% endcompress %}
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WW2W29ZMTZ"></script>
+
     <script src="https://kit.fontawesome.com/e1c9d8c99d.js" crossorigin="anonymous"></script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6XRLBC4TMR"></script>
     {% endblock javascript %}
+
 </head>
