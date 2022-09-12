@@ -13,7 +13,7 @@ pytestmark = pytest.mark.django_db
 fake = Faker()
 
 
-class TestCoreModels(LoggedInMixin, APITestCase):
+class TestSqlData(LoggedInMixin, APITestCase):
     def setUp(self):
         super().setUp()
         self.factory = APIRequestFactory()
@@ -24,7 +24,9 @@ class TestCoreModels(LoggedInMixin, APITestCase):
         admin = DataSourceVersionAdmin(
             model=DataSourceVersion, admin_site=AdminSite()
         )
-        return admin.audit_details_fieldset
+        audit = admin.audit_details_fieldset
+        assert audit[0] == "Audit Details"
+        assert "fields" in audit[1]
 
     def test_save_model(self):
         data_source_admin = DataSourceVersionAdmin(
@@ -38,3 +40,6 @@ class TestCoreModels(LoggedInMixin, APITestCase):
             form=None,
             change=None,
         )
+
+        assert "data_source" in data_source_admin.list_display
+        assert "data_source_version" in data_source_admin.list_display

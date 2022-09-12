@@ -6,7 +6,7 @@ from rest_framework.test import APITestCase
 from apps.common.tests.test_common import LoggedInMixin
 from apps.sql_data.models import (
     DataSourceVersion,
-    SQLExtractMetadata,
+    SQLDatabaseSource,
     SQLUploadChunk,
     SQLUploadMetadata,
     sql_extracts_upload_to,
@@ -17,61 +17,54 @@ pytestmark = pytest.mark.django_db
 fake = Faker()
 
 
-class TestSqlDataModels(LoggedInMixin, APITestCase):
+class TestDataSourceVersion(LoggedInMixin, APITestCase):
+    """Test model: DataSourceVersion"""
+
     def setUp(self):
         super().setUp()
+        self.data_source = baker.make(SQLDatabaseSource)
         self.data_source_version = baker.make(DataSourceVersion)
-        self.extract_metadata = baker.make(SQLExtractMetadata)
-        self.sql_upload_metadata = baker.make(
-            SQLUploadMetadata, extract_metadata=self.extract_metadata
-        )
-        self.upload_chunk = baker.make(
-            SQLUploadChunk,
-            upload_metadata=self.sql_upload_metadata,
-            chunk_content=fake.file_name(),
-        )
 
-    def test_upload_metadata(self):
+    def test_datasource_version_str(self):
         assert (
-            self.extract_metadata.data_source.name
-            == self.sql_upload_metadata.data_source_name
-        )
-        assert (
-            self.sql_upload_metadata.chunks_count
-            == self.upload_chunk.upload_metadata.chunks_count
-        )
-        assert self.sql_upload_metadata.mark_as_complete(
-            user=self.user
-        ) == self.upload_chunk.upload_metadata.mark_as_complete(user=self.user)
-        assert self.sql_upload_metadata.is_complete
-        assert str(self.sql_upload_metadata.name) == str(
-            self.sql_upload_metadata
+                str(self.data_source_version)
+                == str(self.data_source_version.data_source)
+                + " v("
+                + str(self.data_source_version.data_source_version)
+                + ")"
         )
 
-    def test_uploaded_chunk_str(self):
-        assert str(self.upload_chunk) == str(
-            self.upload_chunk.chunk_index
-        ) + "__" + str(self.upload_chunk.id)
 
-        sql_upload_chunk = self.upload_chunk
-        chunk_index = sql_upload_chunk.chunk_index
-        pk = str(sql_upload_chunk.pk)
-        assert sql_extracts_upload_to(
-            sql_upload_chunk, fake.text()
-        ) == "%s/%d__%s" % (
-            sql_upload_chunk.upload_metadata.upload_data_dir,
-            chunk_index,
-            pk,
+class TestSQLUploadChunk(LoggedInMixin, APITestCase):
+    """Test model: SQLUploadChunk"""
+
+    def setUp(self):
+        super().setUp()
+        self.sql_upload_chunk = baker.make(SQLUploadChunk)
+
+    def test_upload_chunk_name(self):
+        assert str(self.sql_upload_chunk) == \
+               str("%d__%s" % (self.sql_upload_chunk.chunk_index, str(self.sql_upload_chunk.pk)))
+
+    def test_chunk_upload_path(self):
+        upload_meta: SQLUploadMetadata = self.sql_upload_chunk.upload_metadata
+        assert sql_extracts_upload_to(self.sql_upload_chunk, fake.text()) == "%s/%d__%s" % (
+            upload_meta.upload_data_dir,
+            self.sql_upload_chunk.chunk_index,
+            self.sql_upload_chunk.pk,
         )
 
-    def test_data_source_version_str(self):
-        assert (
-            str(self.data_source_version)
-            == str(self.data_source_version.data_source)
-            + " v("
-            + str(self.data_source_version.data_source_version)
-            + ")"
-        )
 
-    def test_sql_extract_metadata_str(self):
-        assert str(self.extract_metadata.name) == str(self.extract_metadata)
+class TestSQLUploadMetadata(LoggedInMixin, APITestCase):
+    """Test model: SQLUploadMetadata"""
+
+    def setUp(self):
+        super().setUp()
+        self.sql_upload_metadata = baker.make(SQLUploadMetadata)
+
+    def test_data_source_name(self):
+        assert str(self.sql_upload_metadata.data_source_name) == \
+               str(self.sql_upload_metadata.extract_metadata.data_source.name)
+
+    def test_upload_completion(self):
+        assert str(self.sql_upload_metadata.mark_as_complete(self.user)) == "None"
