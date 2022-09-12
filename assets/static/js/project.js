@@ -36,14 +36,11 @@ function switchDashboards(event) {
 
 
 (function($) {
-    /* Google Analytics */
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag("js", new Date());
-    gtag("config", "G-WW2W29ZMTZ");
+  /* Google Analytics */
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6XRLBC4TMR');
 
     // Auto-collapse open menus in responsive mode
     $(".navbar-collapse a").click(function() {
