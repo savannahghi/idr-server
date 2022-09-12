@@ -29,6 +29,7 @@
     <link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css" rel="stylesheet">
     {% endblock css %}
 
+
     {% block javascript %}
     {% compress js %}
     <script defer src="{% static 'js/vendors.min.js' %}"></script>
@@ -36,19 +37,9 @@
     <script defer src="{% static 'js/project.min.js' %}"></script>
     {% endcompress %}
 
-    <script src="https://kit.fontawesome.com/e1c9d8c99d.js" crossorigin="anonymous"></script>
-    {% endblock javascript %}
-
-
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-S5JLWM36RQ"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-S5JLWM36RQ');
-    </script>
-
+    <script src="https://kit.fontawesome.com/e1c9d8c99d.js" crossorigin="anonymous"></script>
+    {% endblock javascript %}
 
 </head>
