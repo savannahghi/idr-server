@@ -23,7 +23,9 @@ class SQLDatabaseSourceAdmin(AuditBaseModelAdmin):
 
 @admin.register(SQLExtractMetadata)
 class SQLExtractMetadataAdmin(AuditBaseModelAdmin):
+    filter_horizontal = ("applicable_source_versions",)
     list_display = ("name", "version", "description")
+    list_filter = ("data_source",)
 
 
 @admin.register(SQLUploadChunk)
@@ -45,3 +47,4 @@ class SQLUploadMetadataAdmin(AuditBaseModelAdmin):
         "finish_time",
         "is_complete",
     )
+    list_filter = ("extract_metadata", "org_unit_code", "org_unit_name")
