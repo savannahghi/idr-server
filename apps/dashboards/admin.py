@@ -7,6 +7,7 @@ from .models import Dashboard, Visualization
 
 @admin.register(Dashboard)
 class DashboardAdmin(AuditBaseModelAdmin):
+    filter_horizontal = ("visualizations",)
     list_display = ("title", "description", "is_published")
 
 
