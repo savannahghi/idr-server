@@ -5,6 +5,13 @@ from rest_framework.viewsets import GenericViewSet
 
 from apps.core.apiviews import AuditBaseViewSet
 
+from .filters import (
+    DataSourceVersionFilter,
+    SQLDatabaseSourceFilter,
+    SQLExtractMetadataFilter,
+    SQLUploadChunkFilter,
+    SQLUploadMetadataFilter,
+)
 from .models import (
     DataSourceVersion,
     SQLDatabaseSource,
@@ -28,7 +35,7 @@ class DataSourceVersionViewSet(AuditBaseViewSet):
 
     queryset = DataSourceVersion.objects.all()
     serializer_class = DataSourceVersionSerializer
-    filterset_fields = ["id", "data_source", "data_source_version"]
+    filterset_class = DataSourceVersionFilter
 
 
 class SQLDatabaseViewSet(AuditBaseViewSet):
@@ -36,7 +43,7 @@ class SQLDatabaseViewSet(AuditBaseViewSet):
 
     queryset = SQLDatabaseSource.objects.all()
     serializer_class = SQLDatabaseSerializer
-    filterset_fields = ["id", "name", "database_name", "database_vendor"]
+    filterset_class = SQLDatabaseSourceFilter
 
 
 class SQLExtractMetadataViewSet(AuditBaseViewSet):
@@ -46,13 +53,7 @@ class SQLExtractMetadataViewSet(AuditBaseViewSet):
         "applicable_source_versions", "data_source"
     ).all()
     serializer_class = SQLExtractMetadataSerializer
-    filterset_fields = [
-        "id",
-        "name",
-        "data_source__database_name",
-        "version",
-        "preferred_uploads_name",
-    ]
+    filterset_class = SQLExtractMetadataFilter
 
 
 class SQLUploadChunkViewSet(
@@ -65,6 +66,7 @@ class SQLUploadChunkViewSet(
 
     queryset = SQLUploadChunk.objects.all()
     serializer_class = SQLUploadChunkSerializer
+    filterset_class = SQLUploadChunkFilter
 
 
 class SQLUploadMetadataViewSet(AuditBaseViewSet):
@@ -74,6 +76,7 @@ class SQLUploadMetadataViewSet(AuditBaseViewSet):
         "upload_chunks"
     ).all()
     serializer_class = SQLUploadMetadataSerializer
+    filterset_class = SQLUploadMetadataFilter
 
     @action(
         detail=True,
