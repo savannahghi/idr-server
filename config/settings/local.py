@@ -7,7 +7,6 @@ from .base import env
 
 INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS  # noqa
 
-
 ###############################################################################
 # DATABASE CONFIG
 ###############################################################################
