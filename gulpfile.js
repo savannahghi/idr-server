@@ -1,33 +1,31 @@
 // Gulp and package
-const { src, dest, parallel, series, watch } = require("gulp");
-const pjson = require("./package.json");
+import gulp from "gulp";
+import pjson from "./package.json" assert { type: 'json' };
 
 // Plugins
-const autoprefixer = require("autoprefixer");
-const browserSync = require("browser-sync").create();
-const cleanCSS = require("gulp-clean-css");
-const del = require("del");
-const gulp = require("gulp");
-const merge = require("merge-stream");
-const plumber = require("gulp-plumber");
-const rename = require("gulp-rename");
-const gulpSass = require("gulp-sass");
-const dartSass = require("sass")
+import autoprefixer from "autoprefixer";
+import browserSync from "browser-sync";
+import plumber from "gulp-plumber";
+import rename from "gulp-rename";
+import gulpSass from 'gulp-sass';
+import uglify from "gulp-uglify";
+import concat from "gulp-concat";
+import cssnano from "cssnano";
+import imagemin from "gulp-imagemin";
+import pixrem from "pixrem";
+import postcss from "gulp-postcss";
+import lec from "gulp-line-ending-corrector";
+import sourcemaps from "gulp-sourcemaps";
+import dartSass from "sass";
+import { spawn } from "child_process";
+
 const sass = gulpSass(dartSass);
-const uglify = require("gulp-uglify");
-const concat = require("gulp-concat");
-const cssnano = require("cssnano");
-const imagemin = require("gulp-imagemin");
-const pixrem = require("pixrem");
-const postcss = require("gulp-postcss");
-const reload = browserSync.reload;
-const spawn = require("child_process").spawn;
-const lec = require("gulp-line-ending-corrector");
-const sourcemaps = require("gulp-sourcemaps");
+const { src, dest, parallel, series, watch } = gulp;
+const { reload } = browserSync;
 
 // Relative paths function
 function pathsConfig(appName) {
-    this.assets = `./assets`;
+    const assets = `./assets`;
     const vendorsRoot = "node_modules";
 
     return {
@@ -47,12 +45,12 @@ function pathsConfig(appName) {
             `${vendorsRoot}/select2/dist/js/select2.full.min.js`,
         ],
         app: `${pjson.name}`,
-        templates: `${this.assets}/templates`,
-        css: `${this.assets}/static/css`,
-        sass: `${this.assets}/static/sass`,
-        fonts: `${this.assets}/static/fonts`,
-        images: `${this.assets}/static/images`,
-        js: `${this.assets}/static/js`,
+        templates: `${assets}/templates`,
+        css: `${assets}/static/css`,
+        sass: `${assets}/static/sass`,
+        fonts: `${assets}/static/fonts`,
+        images: `${assets}/static/images`,
+        js: `${assets}/static/js`,
     };
 }
 
@@ -177,6 +175,6 @@ const generateAssets = parallel(styles, scripts, vendorScripts, vendorSourceMaps
 
 // Set up dev environment
 const dev = parallel(initBrowserSync, watchPaths);
-exports.default = series(generateAssets, dev);
-exports["generate-assets"] = generateAssets;
-exports["dev"] = dev;
+
+export default series(generateAssets, dev);
+export { generateAssets as "generate-assets", dev };

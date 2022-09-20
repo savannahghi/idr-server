@@ -1,16 +1,15 @@
 ARG PYTHON_VERSION=3.10-slim-buster
 
-FROM node:10-stretch-slim as client-builder
+FROM node:18-slim as client-builder
 
 ARG APP_HOME=/app
 WORKDIR ${APP_HOME}
 
-COPY ./package.json ${APP_HOME}
-RUN npm install && npm cache clean --force
 COPY . ${APP_HOME}
-#RUN npm run build
+RUN npm install && npm cache clean --force
+RUN npm run build
 
-# define an alias for the specfic python version used in this file.
+# Define an alias for the specfic python version used in this file.
 FROM python:${PYTHON_VERSION} as python
 
 # Python build stage
@@ -50,17 +49,16 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   gettext \
   # wget
   wget \
-  # npm and nodejs
-  nodejs npm postgis gdal-bin libgdal-dev \
+  # postgis and gdal
+  postgis gdal-bin libgdal-dev \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
-# All absolute dir copies ignore workdir instruction. All relative dir copies are wrt to the workdir instruction
-# copy python dependency wheels from python-build-stage
+# Copy python dependency wheels from python-build-stage
 COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
 
-# use wheels to install python dependencies
+# Use wheels to install python dependencies
 RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
   && rm -rf /wheels/
 
@@ -69,9 +67,7 @@ COPY ./entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
 
-# copy application code to WORKDIR
+# Copy application code to WORKDIR
 COPY --from=client-builder ${APP_HOME} ${APP_HOME}
-RUN npm run build
-#RUN npm install -g mjml
 
 ENTRYPOINT ["/entrypoint"]
