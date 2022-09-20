@@ -11,10 +11,10 @@ fake = Faker()
 
 class TestGenericSourceViewSet(LoggedInMixin, APITestCase):
     def setUp(self):
+        super().setUp()
         self.generic_source = baker.make(
             GenericSource, description=fake.text()
         )
-        super().setUp()
 
     def test_create(self):
         data = {"name": fake.name(), "description": fake.text()}
