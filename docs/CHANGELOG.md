@@ -1,3 +1,18 @@
+## [1.4.0](https://github.com/savannahghi/idr-server/compare/v1.3.0...v1.4.0) (2022-09-20)
+
+
+### Features
+
+* **admin:** add filters on the admin models ([#41](https://github.com/savannahghi/idr-server/issues/41)) ([5eb7e24](https://github.com/savannahghi/idr-server/commit/5eb7e249b6f3e1b644f37cf351d086038bb55e95))
+* **api:** add missing API filters ([#42](https://github.com/savannahghi/idr-server/issues/42)) ([8aa1834](https://github.com/savannahghi/idr-server/commit/8aa1834bbf7e9e45bd27f03120d7d0e1d2a51bb4))
+* integrate google analytics for user metrics collection ([#38](https://github.com/savannahghi/idr-server/issues/38)) ([974f1b4](https://github.com/savannahghi/idr-server/commit/974f1b45285f58d780e33c4c2eb26085975c772e))
+
+
+### Dependency Updates
+
+* **deps:** bump nth-check, cssnano and gulp-imagemin ([#29](https://github.com/savannahghi/idr-server/issues/29)) ([ade8b81](https://github.com/savannahghi/idr-server/commit/ade8b816807e798fd1ecf0ee9b22f65b7d20faf6))
+* **deps:** update node version and node dependencies ([#44](https://github.com/savannahghi/idr-server/issues/44)) ([21d2865](https://github.com/savannahghi/idr-server/commit/21d28658a71f9117e8f3687c63f9b7f2b78ac51a))
+
 ## [1.3.0](https://github.com/savannahghi/idr-server/compare/v1.2.0...v1.3.0) (2022-09-11)
 
 
