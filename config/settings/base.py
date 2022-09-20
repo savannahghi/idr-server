@@ -68,10 +68,11 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "compressor",
     "crispy_forms",
+    "django_extensions",
+    "django_filters",
     "knox",
     "rest_framework",
     "rest_framework.authtoken",
-    "django_filters",
 ]
 
 LOCAL_APPS = [

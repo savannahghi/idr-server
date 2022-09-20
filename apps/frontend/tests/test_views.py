@@ -7,4 +7,5 @@ from apps.frontend.views import HomeView
 class TestViews(LoggedInMixin, TestCase):
     def test_home_view_context(self):
         view = HomeView()
-        view.get_context_data()
+        ctx = view.get_context_data()
+        assert ctx["view"].template_name == "pages/frontend/home.html"

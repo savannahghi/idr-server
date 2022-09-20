@@ -6,8 +6,6 @@ from .base import env
 ###############################################################################
 
 INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS  # noqa
-INSTALLED_APPS += ["django_extensions"]  # noqa
-
 
 ###############################################################################
 # DATABASE CONFIG

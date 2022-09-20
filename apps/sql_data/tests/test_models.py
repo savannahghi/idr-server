@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 from faker import Faker
 from model_bakery import baker
@@ -26,12 +28,11 @@ class TestDataSourceVersion(LoggedInMixin, APITestCase):
         self.data_source_version = baker.make(DataSourceVersion)
 
     def test_datasource_version_str(self):
-        assert (
-                str(self.data_source_version)
-                == str(self.data_source_version.data_source)
-                + " v("
-                + str(self.data_source_version.data_source_version)
-                + ")"
+        data_source = self.data_source_version.data_source
+        version = self.data_source_version.data_source_version
+        assert str(self.data_source_version) == "%s v(%s)" % (
+            str(data_source),
+            version,
         )
 
 
@@ -43,15 +44,22 @@ class TestSQLUploadChunk(LoggedInMixin, APITestCase):
         self.sql_upload_chunk = baker.make(SQLUploadChunk)
 
     def test_upload_chunk_name(self):
-        assert str(self.sql_upload_chunk) == \
-               str("%d__%s" % (self.sql_upload_chunk.chunk_index, str(self.sql_upload_chunk.pk)))
+        index = self.sql_upload_chunk.chunk_index
+        pk = self.sql_upload_chunk.pk
+        assert str(self.sql_upload_chunk) == "{}__{}".format(index, pk)
 
     def test_chunk_upload_path(self):
         upload_meta: SQLUploadMetadata = self.sql_upload_chunk.upload_metadata
-        assert sql_extracts_upload_to(self.sql_upload_chunk, fake.text()) == "%s/%d__%s" % (
-            upload_meta.upload_data_dir,
-            self.sql_upload_chunk.chunk_index,
-            self.sql_upload_chunk.pk,
+        upload_dir = upload_meta.upload_data_dir
+        upload_extracts = sql_extracts_upload_to(
+            self.sql_upload_chunk, fake.text()
+        )
+        index = self.sql_upload_chunk.chunk_index
+        pk = self.sql_upload_chunk.pk
+        assert str(upload_extracts) == "%s/%d__%s" % (
+            str(upload_dir),
+            index,
+            str(pk),
         )
 
 
@@ -63,8 +71,16 @@ class TestSQLUploadMetadata(LoggedInMixin, APITestCase):
         self.sql_upload_metadata = baker.make(SQLUploadMetadata)
 
     def test_data_source_name(self):
-        assert str(self.sql_upload_metadata.data_source_name) == \
-               str(self.sql_upload_metadata.extract_metadata.data_source.name)
+        data_source = self.sql_upload_metadata.data_source_name
+        data_source_name = (
+            self.sql_upload_metadata.extract_metadata.data_source.name
+        )
+        assert str(data_source) == str(data_source_name)
 
     def test_upload_completion(self):
-        assert str(self.sql_upload_metadata.mark_as_complete(self.user)) == "None"
+        self.sql_upload_metadata.mark_as_complete(self.user)
+        assert self.sql_upload_metadata.updated_by == self.user
+        assert (
+            self.sql_upload_metadata.finish_time.date()
+            == datetime.now().date()
+        )
