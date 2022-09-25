@@ -58,4 +58,3 @@ function switchDashboards(event) {
     // Add a dashboard selection change listener
     $("#dashboards-menu > div > a").click(switchDashboards);
 })(jQuery);
-

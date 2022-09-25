@@ -40,7 +40,28 @@
     <script src="https://kit.fontawesome.com/e1c9d8c99d.js" crossorigin="anonymous"></script>
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6XRLBC4TMR"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id='{{GOOGLE_ANALYTICS_ID}}'"></script>
     {% endblock javascript %}
 
+    <script>
+        <!--add logged-in user details and clicked dashboard as part of analytics info-->
+
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '{{GOOGLE_ANALYTICS_ID}}');
+
+        gtag('set', 'user_properties', {
+           first_name: "{{ user.first_name }}",
+           last_name: "{{ user.last_name }}",
+           email: "{{ user.email }}"
+        });
+
+        function getClickedDashboard(title){
+            gtag('event','clicked_dashboard', {
+            "dashboard": title
+        });
+
+        }
+    </script>
 </head>

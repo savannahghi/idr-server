@@ -10,6 +10,7 @@ env:
   DJANGO_SECRET_KEY: "${{ secrets.DJANGO_SECRET_KEY }}"
   DOCKER_BUILDKIT: 1 # Enable Buildkit and let compose use it to speed up image building
   GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  GOOGLE_ANALYTICS_ID: "${{ secrets.GOOGLE_ANALYTICS_ID }}"
   GOOGLE_APPLICATION_CREDENTIALS: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}"
   GOOGLE_CLOUD_PROJECT: "${{ secrets.GOOGLE_CLOUD_PROJECT }}"
   POSTGRES_DB: postgres

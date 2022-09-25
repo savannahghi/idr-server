@@ -22,6 +22,7 @@ ALLOWED_HOSTS = env.list(
         "icdr.fahariyajamii.org",
     ],
 )
+GOOGLE_ANALYTICS_ID = env.str("GOOGLE_ANALYTICS_ID")
 SECRET_KEY = env.str("DJANGO_SECRET_KEY")
 
 
