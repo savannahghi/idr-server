@@ -38,5 +38,29 @@
     {% block inline_javascript %}
         {# Script tags with only code, no src (defer by default) #}
     {% endblock inline_javascript %}
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6XRLBC4TMR');
+
+<!--save logged in user details-->
+gtag('set', 'user_properties', {
+   first_name: "{{ user.first_name }}",
+   last_name: "{{ user.last_name }}",
+   email: "{{ user.email }}"
+});
+
+<!--log click event for every dashboard clicked-->
+function getClickedDashboard(title){
+    gtag('event','clicked_dashboard', {
+    "dashboard": title
+});
+
+}
+</script>
+
 </body>
+
 </html>

@@ -36,12 +36,6 @@ function switchDashboards(event) {
 
 
 (function($) {
-  /* Google Analytics */
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-6XRLBC4TMR');
-
     // Auto-collapse open menus in responsive mode
     $(".navbar-collapse a").click(function() {
         $(".navbar-collapse").collapse("hide");
@@ -64,3 +58,4 @@ function switchDashboards(event) {
     // Add a dashboard selection change listener
     $("#dashboards-menu > div > a").click(switchDashboards);
 })(jQuery);
+

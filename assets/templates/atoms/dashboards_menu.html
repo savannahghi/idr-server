@@ -8,8 +8,9 @@
     <div id="dashboards-menu" class="collapse show" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded" role="tablist">
             {% for dashboard in dashboards %}
-                <a class="collapse-item text-truncate {% if forloop.first %} active {% endif %}" data-toggle="tooltip" data-placement="bottom" href="#{{ dashboard.pk }}"  title="{{ dashboard.title }}">{{ dashboard.title }}</a>
+                <a class="collapse-item text-truncate {% if forloop.first %} active {% endif %}" onclick="getClickedDashboard('{{dashboard.title}}')" data-toggle="tooltip" data-placement="bottom" href="#{{ dashboard.pk }}" title="{{ dashboard.title }}">{{ dashboard.title }}</a>
             {% endfor %}
         </div>
     </div>
 </li>
+
