@@ -29,8 +29,8 @@ ALLOWED_HOSTS = env.list(
 )
 DEBUG = env.bool("DJANGO_DEBUG", False)
 DJANGO_LOG_LEVEL = env.str("DJANGO_LOG_LEVEL", default="DEBUG")
+GOOGLE_ANALYTICS_ID = env.str("GOOGLE_ANALYTICS_ID")
 SECRET_KEY = env.str("DJANGO_SECRET_KEY", "django-insecure-xlb*ys8xwb04c&=y_z")
-
 
 ###############################################################################
 # FILE SYSTEM AND MISC
