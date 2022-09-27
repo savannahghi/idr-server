@@ -1,3 +1,15 @@
+## [1.5.0](https://github.com/savannahghi/idr-server/compare/v1.4.0...v1.5.0) (2022-09-27)
+
+
+### Features
+
+* add google analytics to track site usage. ([#45](https://github.com/savannahghi/idr-server/issues/45)) ([d290cf3](https://github.com/savannahghi/idr-server/commit/d290cf3bfb09f5c4dbf24ab721001e3c471afce0))
+
+
+### Bug Fixes
+
+* **ci:**  missing env variable error on deployment ([#46](https://github.com/savannahghi/idr-server/issues/46)) ([01e133b](https://github.com/savannahghi/idr-server/commit/01e133b049b504f7ce9e6f7c3a89a2bbcdf59996))
+
 ## [1.4.0](https://github.com/savannahghi/idr-server/compare/v1.3.0...v1.4.0) (2022-09-20)
 
 
