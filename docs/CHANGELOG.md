@@ -1,3 +1,15 @@
+## [1.6.0](https://github.com/savannahghi/idr-server/compare/v1.5.0...v1.6.0) (2022-10-17)
+
+
+### Features
+
+* integrate django channels into the project ([#49](https://github.com/savannahghi/idr-server/issues/49)) ([f20b763](https://github.com/savannahghi/idr-server/commit/f20b7637a55198242aa081174da0c237defca952))
+
+
+### Dependency Updates
+
+* **deps:** update python dependencies. ([#48](https://github.com/savannahghi/idr-server/issues/48)) ([d23207f](https://github.com/savannahghi/idr-server/commit/d23207fa49292ebc40b24aad722d8f7b2694e664))
+
 ## [1.5.0](https://github.com/savannahghi/idr-server/compare/v1.4.0...v1.5.0) (2022-09-27)
 
 
