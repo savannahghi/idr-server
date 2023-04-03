@@ -42,6 +42,7 @@ class SQLUploadMetadataAdmin(AuditBaseModelAdmin):
     list_display = (
         "name",
         "data_source_name",
+        "extract_metadata",
         "chunks_count",
         "start_time",
         "finish_time",
