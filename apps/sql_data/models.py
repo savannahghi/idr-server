@@ -108,7 +108,7 @@ class SQLUploadChunk(AbstractUploadChunk):
 
     upload_metadata = models.ForeignKey(
         "SQLUploadMetadata",
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="upload_chunks",
     )
     chunk_content = models.FileField(
@@ -143,7 +143,7 @@ class SQLUploadMetadata(AbstractOrgUnitUploadMetadata):
         PARQUET = "application/vnd.apache-parquet", _("Parquet")
 
     extract_metadata = models.ForeignKey(
-        SQLExtractMetadata, on_delete=models.PROTECT, related_name="uploads"
+        SQLExtractMetadata, on_delete=models.CASCADE, related_name="uploads"
     )
     content_type = models.CharField(
         max_length=100, choices=UploadContentTypes.choices

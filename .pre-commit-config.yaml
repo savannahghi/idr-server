@@ -1,10 +1,8 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
-exclude: "docs|node_modules|migrations|.git|.tox"
-# default_language_version:
-#  python: python3.11
 default_stages: [commit]
-# fail_fast: true
+exclude: "docs|node_modules|migrations|.git|.tox"
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
