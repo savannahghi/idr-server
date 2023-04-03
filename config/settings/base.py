@@ -32,9 +32,11 @@ DJANGO_LOG_LEVEL = env.str("DJANGO_LOG_LEVEL", default="DEBUG")
 GOOGLE_ANALYTICS_ID = env.str("GOOGLE_ANALYTICS_ID", "G-6XRLBC4TMR")
 SECRET_KEY = env.str("DJANGO_SECRET_KEY", "django-insecure-xlb*ys8xwb04c&=y_z")
 
+
 ###############################################################################
 # FILE SYSTEM AND MISC
 ###############################################################################
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -68,6 +70,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "compressor",
     "crispy_forms",
+    "crispy_bootstrap5",
     "django_extensions",
     "django_filters",
     "knox",
@@ -302,6 +305,15 @@ LOGGING = {
     },
     "root": {"level": "INFO", "handlers": ["console"]},
 }
+
+
+###############################################################################
+# CRISPY FORMS
+###############################################################################
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 
 ###############################################################################
