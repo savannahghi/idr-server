@@ -1,6 +1,8 @@
+import json
 import logging
 
 import sentry_sdk
+from google.oauth2 import service_account
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
 
@@ -10,8 +12,35 @@ from .base import env
 ###############################################################################
 # READ ENVIRONMENT
 ###############################################################################
-ENV_PATH = "/tmp/secrets/.env"
+
+ENV_PATH = env.str("ENV_PATH", default="/tmp/secrets/.env")
 env.read_env(path=ENV_PATH, override=True)
+
+
+###############################################################################
+# LOAD GOOGLE CREDENTIALS
+###############################################################################
+
+# Note that when this is not provided and the production environment is Google
+# Cloud Run, you will not be able to perform some actions such as signing GCS
+# blob URLs.
+# See the link below for an example of such an issue:
+# https://stackoverflow.com/questions/64234214/how-to-generate-a-blob-signed-url-in-google-cloud-run
+GOOGLE_APPLICATION_CREDENTIALS_KEY = env.str(
+    "GOOGLE_APPLICATION_CREDENTIALS_KEY", default=""
+)
+
+if GOOGLE_APPLICATION_CREDENTIALS_KEY:
+    GCS_CREDENTIALS = service_account.Credentials.from_service_account_info(
+        json.loads(GOOGLE_APPLICATION_CREDENTIALS_KEY)
+    )
+    # Set variables that define Google Services Credentials
+    GS_CREDENTIALS = GCS_CREDENTIALS
+
+
+###############################################################################
+# DJANGO DEV PANEL RECOMMENDATIONS AND OTHER SECURITY
+###############################################################################
 
 ALLOWED_HOSTS = env.list(
     "DJANGO_ALLOWED_HOSTS",
@@ -22,15 +51,10 @@ ALLOWED_HOSTS = env.list(
         "icdr.fahariyajamii.org",
     ],
 )
-GOOGLE_ANALYTICS_ID = env.str("GOOGLE_ANALYTICS_ID")
-SECRET_KEY = env.str("DJANGO_SECRET_KEY")
-
-
-###############################################################################
-# DJANGO DEV PANEL RECOMMENDATIONS AND OTHER SECURITY
-###############################################################################
 
 DEBUG = False
+
+SECRET_KEY = env.str("DJANGO_SECRET_KEY")
 
 
 ###############################################################################
@@ -62,6 +86,13 @@ CACHES = {
         "LOCATION": "cache_table",
     }
 }
+
+
+###############################################################################
+# GOOGLE ANALYTICS
+###############################################################################
+
+GOOGLE_ANALYTICS_ID = env.str("GOOGLE_ANALYTICS_ID")
 
 
 ###############################################################################
@@ -127,30 +158,37 @@ COMPRESS_FILTERS = {
 
 LOGGING = {
     "version": 1,
-    "disable_existing_loggers": True,
+    "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s "
-            "%(process)d %(thread)d %(message)s"
+            "format": (
+                "{levelname}: {asctime} - <module={module} | "
+                "function={funcName} | line={lineno:d}> - {message}"
+            ),
+            "style": "{",
         }
     },
     "handlers": {
         "console": {
-            "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "verbose",
+            "level": "DEBUG",
         }
     },
-    "root": {"level": "INFO", "handlers": ["console"]},
     "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": True,
+        },
         "django.db.backends": {
-            "level": "ERROR",
+            "level": "WARNING",
             "handlers": ["console"],
             "propagate": False,
         },
         # Errors logged by the SDK itself
         "sentry_sdk": {
-            "level": "ERROR",
+            "level": "WARNING",
             "handlers": ["console"],
             "propagate": False,
         },
