@@ -6,7 +6,7 @@ ARG APP_HOME=/app
 WORKDIR ${APP_HOME}
 
 COPY . ${APP_HOME}
-RUN npm install && npm cache clean --force
+RUN npm ci --no-audit && npm cache clean --force
 RUN npm run build
 
 # Define an alias for the specfic python version used in this file.
@@ -62,12 +62,15 @@ COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
 RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
   && rm -rf /wheels/
 
-
-COPY ./entrypoint /entrypoint
-RUN sed -i 's/\r$//g' /entrypoint
-RUN chmod +x /entrypoint
-
 # Copy application code to WORKDIR
 COPY --from=client-builder ${APP_HOME} ${APP_HOME}
 
-ENTRYPOINT ["/entrypoint"]
+
+# Run the web service on container startup.
+# Timeout is set to 0 to disable the timeouts of the workers to allow Cloud
+# Run to handle instance scaling.
+CMD gunicorn config.asgi \
+    --bind 0.0.0.0:$PORT \
+    --timeout 0 \
+    --chdir=/app \
+    -k uvicorn.workers.UvicornWorker
