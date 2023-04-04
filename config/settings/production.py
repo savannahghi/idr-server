@@ -45,7 +45,8 @@ DATABASES = {
         "HOST": env.str("POSTGRES_HOST"),
         "PORT": env.str("POSTGRES_PORT", None),
         "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "ATOMIC_REQUESTS": True,
+        "ATOMIC_REQUESTS": False,
+        "CONN_HEALTH_CHECKS": True,
         "CONN_MAX_AGE": env.int("CONN_MAX_AGE", default=60),
     },
 }
