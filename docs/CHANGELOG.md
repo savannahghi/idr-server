@@ -1,3 +1,16 @@
+## [1.6.1](https://github.com/savannahghi/idr-server/compare/v1.6.0...v1.6.1) (2023-04-04)
+
+
+### Bug Fixes
+
+* assorted fixes ([#55](https://github.com/savannahghi/idr-server/issues/55)) ([113aa02](https://github.com/savannahghi/idr-server/commit/113aa02e203ee3b57f2a7ebbde2b7a7552057bf8))
+* **db:** database connection errors ([#56](https://github.com/savannahghi/idr-server/issues/56)) ([c9758d3](https://github.com/savannahghi/idr-server/commit/c9758d3787d04eb25491b4c77e7ccc58cc7b41a2))
+
+
+### Dependency Updates
+
+* **deps:** update project dependencies ([#54](https://github.com/savannahghi/idr-server/issues/54)) ([bd9cdb1](https://github.com/savannahghi/idr-server/commit/bd9cdb14978ed998384e0eeceed3b269b7f2d981))
+
 ## [1.6.0](https://github.com/savannahghi/idr-server/compare/v1.5.0...v1.6.0) (2022-10-17)
 
 
