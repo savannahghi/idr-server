@@ -96,7 +96,7 @@ DATABASES = {
         "USER": env.str("POSTGRES_USER"),
         "PASSWORD": env.str("POSTGRES_PASSWORD"),
         "HOST": env.str("POSTGRES_HOST"),
-        "PORT": env.str("POSTGRES_PORT", None),
+        "PORT": env.str("POSTGRES_PORT", default=None),
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "ATOMIC_REQUESTS": False,
         "CONN_HEALTH_CHECKS": True,
@@ -155,10 +155,12 @@ GS_DEFAULT_ACL = "projectPrivate"
 # STATIC ASSETS AND MEDIA FILES
 ###############################################################################
 
-DEFAULT_FILE_STORAGE = "utils.storages.MediaRootGoogleCloudStorage"
 MEDIA_URL = "https://storage.googleapis.com/%s/media/" % GS_BUCKET_NAME
 STATIC_URL = "https://storage.googleapis.com/%s/static/" % GS_BUCKET_NAME
-STATICFILES_STORAGE = "utils.storages.StaticRootGoogleCloudStorage"
+STORAGES = {
+    "default": {"BACKEND": "utils.storages.MediaRootGoogleCloudStorage"},
+    "staticfiles": {"BACKEND": "utils.storages.StaticRootGoogleCloudStorage"},
+}
 
 
 ###############################################################################
@@ -177,9 +179,11 @@ COMPRESS_FILTERS = {
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_OFFLINE
 COMPRESS_OFFLINE = True
 # https://django-compressor.readthedocs.io/en/stable/settings.html#django.conf.settings.COMPRESS_OFFLINE_MANIFEST_STORAGE
-COMPRESS_OFFLINE_MANIFEST_STORAGE = STATICFILES_STORAGE
+COMPRESS_OFFLINE_MANIFEST_STORAGE = (
+    "utils.storages.StaticRootGoogleCloudStorage"
+)
 # https://django-compressor.readthedocs.io/en/stable/settings.html#django.conf.settings.COMPRESS_STORAGE
-COMPRESS_STORAGE = STATICFILES_STORAGE
+COMPRESS_STORAGE = "utils.storages.StaticRootGoogleCloudStorage"
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_URL
 COMPRESS_URL = STATIC_URL
 

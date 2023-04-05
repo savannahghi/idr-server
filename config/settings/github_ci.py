@@ -17,22 +17,13 @@ DATABASES = {
         "NAME": env.str("POSTGRES_DB"),
         "USER": env.str("POSTGRES_USER"),
         "PASSWORD": env.str("POSTGRES_PASSWORD"),
-        "HOST": env.str("POSTGRES_HOST"),
-        "PORT": env.str("POSTGRES_PORT", None),
+        "HOST": env.str("POSTGRES_HOST", default="localhost"),
+        "PORT": env.int("POSTGRES_PORT", default=5432),
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "ATOMIC_REQUESTS": True,
         "CONN_MAX_AGE": env.int("CONN_MAX_AGE", default=60)
     },
 }
-
-
-###############################################################################
-# STORAGES
-###############################################################################
-
-INSTALLED_APPS += ["storages"]
-GS_BUCKET_NAME = env.str("DJANGO_GCP_STORAGE_BUCKET_NAME")
-GS_DEFAULT_ACL = "project-private"
 
 
 ###############################################################################
@@ -52,12 +43,3 @@ COMPRESS_FILTERS = {
     ],
     "js": ["compressor.filters.jsmin.JSMinFilter"],
 }
-
-
-###############################################################################
-# STATIC ASSETS AND MEDIA FILES
-###############################################################################
-
-DEFAULT_FILE_STORAGE = "utils.storages.MediaRootGoogleCloudStorage"
-MEDIA_URL = "https://storage.googleapis.com/%s/media/" % GS_BUCKET_NAME
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
