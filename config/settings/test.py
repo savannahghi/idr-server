@@ -7,17 +7,23 @@ from .base import env
 
 DATABASES = {
     "default": {
-        "NAME": env.str("TEST_POSTGRES_DB"),
-        "USER": env.str("TEST_POSTGRES_USER"),
-        "PASSWORD": env.str("TEST_POSTGRES_PASSWORD"),
-        "HOST": env.str("TEST_POSTGRES_HOST"),
-        "PORT": env.str("TEST_POSTGRES_PORT", None),
+        "NAME": env.str(
+            "TEST_POSTGRES_DB", default=f"test_{env.str('POSTGRES_DB')}"
+        ),
+        "USER": env.str(
+            "TEST_POSTGRES_USER", default=env.str("POSTGRES_USER")
+        ),
+        "PASSWORD": env.str(
+            "TEST_POSTGRES_PASSWORD", defualt=env.str("POSTGRES_PASSWORD")
+        ),
+        "HOST": env.str("TEST_POSTGRES_HOST", default="localhost"),
+        "PORT": env.int("TEST_POSTGRES_PORT", port=5432),
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "ATOMIC_REQUESTS": True,
         "TEST": {
-            "NAME": env.str("TEST_POSTGRES_DB"),
-            "USER": env.str("TEST_POSTGRES_USER"),
-            "PASSWORD": env.str("TEST_POSTGRES_PASSWORD"),
+            "NAME": env.str(
+                "TEST_POSTGRES_DB", default=f"test_{env.str('POSTGRES_DB')}"
+            )
         },
     },
 }
