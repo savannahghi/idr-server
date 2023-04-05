@@ -1,3 +1,21 @@
+## [1.6.2](https://github.com/savannahghi/idr-server/compare/v1.6.1...v1.6.2) (2023-04-05)
+
+
+### Bug Fixes
+
+* GCS blobs signed URLS generation ([#61](https://github.com/savannahghi/idr-server/issues/61)) ([56209d9](https://github.com/savannahghi/idr-server/commit/56209d9f3fef94ec4404a50d72706e35fc405d31))
+
+
+### Dependency Updates
+
+* **deps:** update node dependencies ([#60](https://github.com/savannahghi/idr-server/issues/60)) ([3a7eca4](https://github.com/savannahghi/idr-server/commit/3a7eca4d26fb3cfd167615dfcf64c4fdc57a72bb))
+
+
+### Refactors
+
+* **conf:** migrate production static storage to GCS buckets ([#62](https://github.com/savannahghi/idr-server/issues/62)) ([fd816c8](https://github.com/savannahghi/idr-server/commit/fd816c894b24516973623388d967047278af3a50))
+* **conf:** update storages configuration ([#63](https://github.com/savannahghi/idr-server/issues/63)) ([70b6244](https://github.com/savannahghi/idr-server/commit/70b624474254de58742f874b252105c8213811c6)), closes [/docs.djangoproject.com/en/4.2/releases/4.2/#psycopg-3](https://github.com/savannahghi//docs.djangoproject.com/en/4.2/releases/4.2//issues/psycopg-3)
+
 ## [1.6.1](https://github.com/savannahghi/idr-server/compare/v1.6.0...v1.6.1) (2023-04-04)
 
 
