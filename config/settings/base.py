@@ -204,7 +204,7 @@ CORS_URLS_REGEX = r"^/api/.*$"
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Africa/Nairobi"
 USE_I18N = True
-# USE_L10N = True
+USE_L10N = True
 USE_TZ = True
 
 
@@ -223,7 +223,12 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
     "compressor.finders.CompressorFinder",
 ]
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
 WHITENOISE_MANIFEST_STRICT = False
 

@@ -31,7 +31,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ["3.10", "3.11"]
+        python-version: ["3.11"]
     
     # Service containers to run with `container-job`
     services:
