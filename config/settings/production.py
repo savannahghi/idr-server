@@ -23,7 +23,8 @@ ENV_PATH = env.str("ENV_PATH", default=None)
 # First, try and load the environment variables from an .env file if a path to
 # the file is provided.
 if ENV_PATH:
-    env.read_env(path=ENV_PATH, override=True)
+    pass
+    # env.read_env(path=ENV_PATH, override=True)
 # Else, load the variables from Google Secrets Manager
 else:
     SETTINGS_NAME = env.str("SETTINGS_NAME")
@@ -74,10 +75,12 @@ if GOOGLE_APPLICATION_CREDENTIALS_KEY:
 ALLOWED_HOSTS = env.list(
     "DJANGO_ALLOWED_HOSTS",
     default=[
+        "127.0.0.1",
         ".fahariyajamii.org",
         "cbs.fahariyajamii.org",
         "idr.fahariyajamii.org",
         "icdr.fahariyajamii.org",
+        "idr.k8ts.fahariyajamii.org"
     ],
 )
 

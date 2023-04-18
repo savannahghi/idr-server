@@ -1,0 +1,42 @@
+namespace: cluster_namespace
+replicaCount: 2
+
+image:
+  repository: repo
+  tag: commit_sha
+  pullPolicy: Always
+  containerPort: 8080
+
+service:
+  port: 80
+  type: NodePort
+  node_port: 32000
+
+
+env:
+  normal:
+    postgres_port: "5432"
+    postgres_host: "127.0.0.1"
+  secret:
+    app_settings_path: "app_settings"
+
+  db:
+    cloudsql_connection_instance: "cloudsql_connection_instance"
+
+
+roles:
+  cluster_role:
+    name: role-name
+  service_account:
+    iam_account: iam-account-name
+    k8ts_account: k8ts-account-name
+
+networking:
+  issuer:
+    name: "letsencrypt-prod"
+    acme:
+      server: "https://acme-v02.api.letsencrypt.org/directory"
+      email: "info@savannahinformatics.com"
+  ingress:
+    domain: ""
+    static_ip_name: ""
