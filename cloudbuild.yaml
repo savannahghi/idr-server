@@ -82,7 +82,7 @@ steps:
     args:
       - cluster-info
 
-  # Show kubernetes manifest
+  # Show kubernetes manifest with values substituted
   - id: "show kubernetes manifest"
     dir: "deploy"
     name: "gcr.io/$PROJECT_ID/helm:3.7.0"
@@ -95,27 +95,28 @@ steps:
       - --values
       - values.yaml
       - --set
-      - image.repository=${_IMAGE_NAME}
-      - --set
-      - image.tag=$COMMIT_SHA
-      - --set
       - namespace=${_NAMESPACE}
       - --set
-      - env.secret.app_settings_path=${_POD_APP_SETTINGS_PATH}
+      - django.image.repository=${_IMAGE_NAME}
       - --set
-      - networking.ingress.domain=${_DOMAIN_NAME}
+      - django.image.tag=$COMMIT_SHA
       - --set
-      - networking.ingress.static_ip_name=${_STATIC_IP_NAME}
+      - ingress.networking.domain=${_DOMAIN_NAME}
       - --set
-      - roles.cluster_role.name=${_CLUSTER_ROLE_NAME}
+      - ingress.networking.issuer.name=${_LETSENCRYPT_SERVER_TYPE}
       - --set
-      - roles.service_account.iam_account=${_IAM_SERVICE_ACCOUNT}
+      - ingress.networking.static_ip_name=${_STATIC_IP_NAME}
       - --set
-      - roles.service_account.k8ts_account=${_K8TS_SERVICE_ACCOUNT}
+      - pg_bouncer.env.db_name=${_PG_NAME}
       - --set
-      - env.db.cloudsql_connection_instance=${_CLOUDSQL_INSTANCE_CONNECTION_NAME}
+      - pg_bouncer.env.db_user=${_PG_USER}
+      - --set
+      - pg_bouncer.env.db_password=${_PG_PASSWORD}
+      - --set
+      - cloud_sql.env.cloudsql_connection_instance=${_CLOUDSQL_INSTANCE_CONNECTION_NAME}
+      - --set
+      - django.configmap.config_name=${_CONFIGMAP_FILE}
       - .
-
 
   # Update essential variables and Deploy to cluster
   - id: "update essential variables and start deployment to cluster"
@@ -131,25 +132,27 @@ steps:
       - --values
       - values.yaml
       - --set
-      - image.repository=${_IMAGE_NAME}
-      - --set
-      - image.tag=$COMMIT_SHA
-      - --set
       - namespace=${_NAMESPACE}
       - --set
-      - env.secret.app_settings_path=${_POD_APP_SETTINGS_PATH}
+      - django.image.repository=${_IMAGE_NAME}
       - --set
-      - networking.ingress.domain=${_DOMAIN_NAME}
+      - django.image.tag=$COMMIT_SHA
       - --set
-      - networking.ingress.static_ip_name=${_STATIC_IP_NAME}
+      - ingress.networking.domain=${_DOMAIN_NAME}
       - --set
-      - roles.cluster_role.name=${_CLUSTER_ROLE_NAME}
+      - ingress.networking.issuer.name=${_LETSENCRYPT_SERVER_TYPE}
       - --set
-      - roles.service_account.iam_account=${_IAM_SERVICE_ACCOUNT}
+      - ingress.networking.static_ip_name=${_STATIC_IP_NAME}
       - --set
-      - roles.service_account.k8ts_account=${_K8TS_SERVICE_ACCOUNT}
+      - pg_bouncer.env.db_name=${_PG_NAME}
       - --set
-      - env.db.cloudsql_connection_instance=${_CLOUDSQL_INSTANCE_CONNECTION_NAME}
+      - pg_bouncer.env.db_user=${_PG_USER}
+      - --set
+      - pg_bouncer.env.db_password=${_PG_PASSWORD}
+      - --set
+      - cloud_sql.env.cloudsql_connection_instance=${_CLOUDSQL_INSTANCE_CONNECTION_NAME}
+      - --set
+      - django.configmap.config_name=${_CONFIGMAP_FILE}
       - .
 
 images:

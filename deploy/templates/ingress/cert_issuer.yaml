@@ -1,14 +1,14 @@
 apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
+kind: Issuer
 metadata:
-  name: {{ .Values.networking.issuer.name }}
+  name: {{ .Values.ingress.networking.issuer.name }}
   namespace: {{ .Values.namespace }}
 spec:
   acme:
-    server: {{ .Values.networking.issuer.acme.server }}
-    email: {{ .Values.networking.issuer.acme.email }}
+    server: {{ .Values.ingress.networking.issuer.acme.server }}
+    email: {{ .Values.ingress.networking.issuer.acme.email }}
     privateKeySecretRef:
-      name: {{ .Values.networking.issuer.name }}
+      name: {{ .Values.ingress.networking.issuer.name }}
     solvers:
       - http01:
           ingress:

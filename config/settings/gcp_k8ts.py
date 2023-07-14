@@ -1,13 +1,7 @@
-import io
 import json
 import logging
 
-import google.auth
-import google.auth.exceptions
 import sentry_sdk
-from django.conf import ImproperlyConfigured
-from dotenv import load_dotenv
-from google.cloud import secretmanager
 from google.oauth2 import service_account
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
@@ -15,35 +9,9 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 from .base import *  # noqa
 from .base import env
 
-###############################################################################
-# READ ENVIRONMENT
-###############################################################################
-
-ENV_PATH = env.str("ENV_PATH", default=None)
-# First, try and load the environment variables from an .env file if a path to
-# the file is provided.
-if ENV_PATH:
-    env.read_env(path=ENV_PATH, override=True)
-# Else, load the variables from Google Secrets Manager
-else:
-    SETTINGS_NAME = env.str("SETTINGS_NAME")
-    try:
-        GCP_PROJECT_ID = env.str(
-            "GOOGLE_CLOUD_PROJECT", default=google.auth.default()
-        )
-    except google.auth.exceptions.DefaultCredentialsError:
-        raise ImproperlyConfigured(
-            "No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found."
-        )
-
-    secret_manager_client = secretmanager.SecretManagerServiceClient()
-    secrets_name = "projects/{}/secrets/{}/versions/latest".format(
-        GCP_PROJECT_ID, SETTINGS_NAME
-    )
-    payload = secret_manager_client.access_secret_version(
-        name=secrets_name
-    ).payload.data.decode("UTF-8")
-    load_dotenv(stream=io.StringIO(payload), override=True)
+################################################################################
+# NOTICE: ENVIRONMENT VARIABLES HAVE BEEN SOURCED IN THE POD RUNNING THE SERVICE
+################################################################################
 
 
 ###############################################################################

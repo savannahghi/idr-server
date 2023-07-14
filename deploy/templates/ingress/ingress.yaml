@@ -1,26 +1,27 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-    name: {{ .Chart.Name }}-ingress
+    name: {{ .Values.ingress.app_name }}
     namespace: {{ .Values.namespace }}
     annotations:
-        cert-manager.io/cluster-issuer: {{ .Values.networking.issuer.name }}
+        cert-manager.io/issuer: {{ .Values.ingress.networking.issuer.name }}
         konghq.com/protocols: "http,https"
         konghq.com/https-redirect-status-code: "308"
 spec:
     ingressClassName: kong
     tls:
-        - secretName: {{ .Chart.Name }}-tls
+        - secretName: {{ .Values.ingress.app_name }}-tls
           hosts:
-              - {{ .Values.networking.ingress.domain }}
+              - {{ .Values.ingress.networking.domain }}
     rules:
-        - host: {{ .Values.networking.ingress.domain }}
+        - host: {{ .Values.ingress.networking.domain }}
           http:
               paths:
                   - path: /
                     pathType: ImplementationSpecific
                     backend:
                         service:
-                            name: {{ .Chart.Name }}-service
+                            name: {{ .Values.django.app_name }}-service
                             port:
-                                number: {{ .Values.image.containerPort }}
+                                number: {{ .Values.django.image.container_port }}
+

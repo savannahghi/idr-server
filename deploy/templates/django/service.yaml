@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.django.app_name }}-service
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.django.app_name }}
+spec:
+  type: {{ .Values.django.service.type }}
+  selector:
+    app: {{ .Values.django.app_name }}
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.django.image.container_port }}
+      targetPort: {{ .Values.django.image.container_port }}
+

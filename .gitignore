@@ -297,7 +297,6 @@ tags
 ### Project template
 staticfiles/
 media/
-rbac/
 .pytest_cache/
 .ipython/
 .env

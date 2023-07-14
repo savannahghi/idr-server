@@ -1,42 +1,56 @@
 namespace: cluster_namespace
-replicaCount: 2
+replica_count: 1
 
-image:
-  repository: repo
-  tag: commit_sha
-  pullPolicy: Always
-  containerPort: 8080
+django:
+  app_name: django
+  replica_count: 1
+  image:
+    repository: repo
+    tag: commit_sha
+    pull_policy: Always
+    container_port: 8080
+  service:
+    port: 80
+    type: NodePort
+  configmap:
+    config_name: "config_name"
+  secrets:
+    secrets_name: "secrets_name"
 
-service:
-  port: 80
-  type: NodePort
-  node_port: 32000
-
-
-env:
-  normal:
-    postgres_port: "5432"
-    postgres_host: "127.0.0.1"
-  secret:
-    app_settings_path: "app_settings"
-
-  db:
+cloud_sql:
+  app_name: cloudsql-proxy
+  replica_count: 1
+  image:
+    repository: gcr.io/cloud-sql-connectors/cloud-sql-proxy
+    tag: "2.6.0"
+  env:
     cloudsql_connection_instance: "cloudsql_connection_instance"
 
+pg_bouncer:
+  app_name: pgbouncer
+  replica_count: 1
+  image:
+    repository: bitnami/pgbouncer
+    tag: "1.19.1"
+  service:
+    type: LoadBalancer
+    pgb_port: 6432
+    pgb_target_port: 6432
+  env:
+    db_host: "127.0.0.1"
+    db_port: 5432
+    db_name: "database_name"
+    db_user: "database_user"
+    db_password: "database_password"
 
-roles:
-  cluster_role:
-    name: role-name
-  service_account:
-    iam_account: iam-account-name
-    k8ts_account: k8ts-account-name
-
-networking:
-  issuer:
-    name: "letsencrypt-prod"
-    acme:
-      server: "https://acme-v02.api.letsencrypt.org/directory"
-      email: "info@savannahinformatics.com"
-  ingress:
+ingress:
+  app_name: ingress
+  networking:
     domain: ""
     static_ip_name: ""
+    issuer:
+      name: "letsencrypt-staging"
+      acme:
+        server: "https://acme-v02.api.letsencrypt.org/directory"
+        email: "support@mail.fahariyajamii.org"
+
