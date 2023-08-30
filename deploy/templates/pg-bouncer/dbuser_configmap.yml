@@ -6,4 +6,3 @@ data:
   # echo -n '"user" "pa$$worLd"' | base64
   userlist.txt: |
     {{ .Values.pg_bouncer.env.db_user | toString | quote }} {{ .Values.pg_bouncer.env.db_password | toString | quote }}
-    

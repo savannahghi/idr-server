@@ -14,4 +14,3 @@ spec:
       protocol: TCP
       port: {{ .Values.django.image.container_port }}
       targetPort: {{ .Values.django.image.container_port }}
-

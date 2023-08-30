@@ -8,5 +8,3 @@ data:
   POSTGRESQL_PASSWORD: {{ .Values.pg_bouncer.env.db_password }}
   POSTGRESQL_HOST: {{ .Values.pg_bouncer.env.db_host }}
   POSTGRESQL_PORT: {{ .Values.pg_bouncer.env.db_port | toString | quote }}
-
-

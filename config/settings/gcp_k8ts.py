@@ -9,9 +9,9 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 from .base import *  # noqa
 from .base import env
 
-################################################################################
-# NOTICE: ENVIRONMENT VARIABLES HAVE BEEN SOURCED IN THE POD RUNNING THE SERVICE
-################################################################################
+# -----------------------------------------------------------
+# NOTE: Environment Variables have been sourced as configmaps
+# -----------------------------------------------------------
 
 
 ###############################################################################

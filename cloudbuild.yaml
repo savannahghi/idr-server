@@ -118,7 +118,7 @@ steps:
       - django.configmap.config_name=${_CONFIGMAP_FILE}
       - .
 
-  # Update essential variables and Deploy to cluster
+  # Update essential Variables and Deploy to cluster
   - id: "update essential variables and start deployment to cluster"
     dir: "deploy"
     name: "gcr.io/$PROJECT_ID/helm:3.7.0"
