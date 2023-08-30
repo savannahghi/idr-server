@@ -1,0 +1,9 @@
+apiVersion: v2
+name: idr-server
+sources:
+  - https://github.com/savannahghi/idr-server
+description: IDR-Server Deployment Chart
+
+type: application
+version: 0.1.7
+appVersion: "v1.6.5"

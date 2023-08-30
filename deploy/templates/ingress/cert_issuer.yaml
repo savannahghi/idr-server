@@ -1,0 +1,20 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ .Values.ingress.networking.issuer.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  acme:
+    server: {{ .Values.ingress.networking.issuer.acme.server }}
+    email: {{ .Values.ingress.networking.issuer.acme.email }}
+    privateKeySecretRef:
+      name: {{ .Values.ingress.networking.issuer.name }}
+    solvers:
+      - http01:
+          ingress:
+            podTemplate:
+              metadata:
+                annotations:
+                  kuma.io/sidecar-injection: 'false'
+                  sidecar.istio.io/inject: 'false'
+            class: kong

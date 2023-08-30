@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.django.app_name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.django.app_name }}
+spec:
+  replicas: {{ .Values.django.replica_count }}
+  selector:
+    matchLabels:
+      app: {{ .Values.django.app_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.django.app_name }}
+    spec:
+      containers:
+        - name: {{ .Values.django.app_name }}
+          image: {{ .Values.django.image.repository }}:{{ .Values.django.image.tag }}
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: {{ .Values.django.image.container_port }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.django.configmap.config_name }}
+          volumeMounts:
+            - name: env-var-vol
+              mountPath: /secrets/environment_variables
+              readOnly: true
+
+      volumes:
+        - name: env-var-vol
+          configMap:
+            name: {{ .Values.django.configmap.config_name }}
