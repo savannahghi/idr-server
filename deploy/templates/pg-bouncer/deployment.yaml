@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.pg_bouncer.app_name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.pg_bouncer.replica_count }}
+  selector:
+    matchLabels:
+      app: {{ .Values.pg_bouncer.app_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.pg_bouncer.app_name }}
+    spec:
+      containers:
+        - name: {{ .Values.pg_bouncer.app_name }}
+          image: {{ .Values.pg_bouncer.image.repository }}:{{ .Values.pg_bouncer.image.tag }}
+          ports:
+            - containerPort: {{ .Values.pg_bouncer.service.pgb_port }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.pg_bouncer.app_name }}-db-config
+          volumeMounts:
+            - name: user-config
+              mountPath: /bitnami/pgbouncer/conf/userlist.txt
+              subPath: userlist.txt
+            - name: pgbouncer-config
+              mountPath: /bitnami/pgbouncer/conf/pgbouncer.ini
+              subPath: pgbouncer.ini
+        - name: cloud-sql-proxy
+          image: {{ .Values.cloud_sql.image.repository }}:{{ .Values.cloud_sql.image.tag }}
+          args:
+            - "--structured-logs"
+            - "--port=5432"
+            - "{{ .Values.cloud_sql.env.cloudsql_connection_instance }}"
+            - "--credentials-file=/secrets/service_account_secrets/service_account.json"
+          securityContext:
+            runAsNonRoot: true
+          volumeMounts:
+            - name: sa-secret-vol
+              mountPath: /secrets/service_account_secrets
+              readOnly: true
+      volumes:
+        - name: user-config
+          configMap:
+            name: {{ .Values.pg_bouncer.app_name }}-user-config
+
+        - name: pgbouncer-config
+          configMap:
+            name: {{ .Values.pg_bouncer.app_name }}-pgb-config
+
+        - name: sa-secret-vol
+          secret:
+            secretName: {{ .Values.namespace }}-sa-secrets
