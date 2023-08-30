@@ -6,7 +6,7 @@ metadata:
   labels:
     app: {{ .Values.django.app_name }}
 spec:
-  replicas: {{ .Values.replica_count }}
+  replicas: {{ .Values.django.replica_count }}
   selector:
     matchLabels:
       app: {{ .Values.django.app_name }}

@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.pg_bouncer.app_name }}
   namespace: {{ .Values.namespace }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.pg_bouncer.replica_count }}
   selector:
     matchLabels:
       app: {{ .Values.pg_bouncer.app_name }}

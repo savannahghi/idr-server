@@ -1,9 +1,8 @@
 namespace: cluster_namespace
-replica_count: 1
 
 django:
   app_name: django
-  replica_count: 1
+  replica_count: 2
   image:
     repository: repo
     tag: commit_sha
@@ -19,7 +18,6 @@ django:
 
 cloud_sql:
   app_name: cloudsql-proxy
-  replica_count: 1
   image:
     repository: gcr.io/cloud-sql-connectors/cloud-sql-proxy
     tag: "2.6.0"
@@ -28,7 +26,7 @@ cloud_sql:
 
 pg_bouncer:
   app_name: pgbouncer
-  replica_count: 1
+  replica_count: 2
   image:
     repository: bitnami/pgbouncer
     tag: "1.19.1"
