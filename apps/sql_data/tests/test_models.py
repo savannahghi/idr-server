@@ -70,6 +70,13 @@ class TestSQLUploadMetadata(LoggedInMixin, APITestCase):
         super().setUp()
         self.sql_upload_metadata = baker.make(SQLUploadMetadata)
 
+    def test_chunks_count(self):
+        chunk = baker.make(
+            SQLUploadChunk, upload_metadata=self.sql_upload_metadata
+        )
+        chunk.save()
+        assert self.sql_upload_metadata.chunks_count == 1
+
     def test_data_source_name(self):
         data_source = self.sql_upload_metadata.data_source_name
         data_source_name = (
