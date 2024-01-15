@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.pg_bouncer.app_name }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Values.common.cluster_namespace }}
 spec:
   replicas: {{ .Values.pg_bouncer.replica_count }}
   selector:
@@ -34,12 +34,12 @@ spec:
             - "--structured-logs"
             - "--port=5432"
             - "{{ .Values.cloud_sql.env.cloudsql_connection_instance }}"
-            - "--credentials-file=/secrets/service_account_secrets/service_account.json"
+            - "--credentials-file=/secrets/{{ .Values.common.service_account_name }}/service_account.json"
           securityContext:
             runAsNonRoot: true
           volumeMounts:
             - name: sa-secret-vol
-              mountPath: /secrets/service_account_secrets
+              mountPath: "/secrets/{{ .Values.common.service_account_name }}"
               readOnly: true
       volumes:
         - name: user-config
@@ -52,4 +52,4 @@ spec:
 
         - name: sa-secret-vol
           secret:
-            secretName: {{ .Values.namespace }}-sa-secrets
+            secretName: {{ .Values.common.service_account_name }}

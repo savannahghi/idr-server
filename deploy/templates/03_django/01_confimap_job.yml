@@ -1,0 +1,103 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: configmap-creator
+  namespace: {{ .Values.common.cluster_namespace }}
+spec:
+  ttlSecondsAfterFinished: {{ .Values.cloud_sdk.ttl_after_success }}
+  template:
+    metadata:
+      name: configmap-creator
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: configmap-creator
+        image: {{ .Values.cloud_sdk.image.repository }}:{{ .Values.cloud_sdk.image.tag }}
+        imagePullPolicy: {{ .Values.cloud_sdk.image.pull_policy }}
+        env:
+          - name: PROJECT_ID
+            value: {{ .Values.common.project_id }}
+          - name: CLUSTER_NAME
+            value: {{ .Values.common.cluster_name }}
+          - name: COMPUTE_ZONE
+            value: {{ .Values.common.compute_zone }}
+          - name: K8TS_DJANGO_SETTINGS_MODULE
+            value: {{ .Values.django.env.django_settings_module }}
+          - name: K8TS_POSTGRES_HOST
+            value: {{ .Values.django.env.postgres_host }}
+          - name: K8TS_POSTGRES_PORT
+            value: {{ .Values.django.env.postgres_port | quote }}
+          - name: SECRET_MANAGER_FILE_NAME
+            value: {{ .Values.secret_manager.file_name }}
+          - name: SERVICE_ACCOUNT_NAME
+            value: {{ .Values.common.service_account_name }}
+          - name: CONFIGMAP_NAME
+            value: {{ .Values.django.app_name }}-settings
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          set -e
+          # Step 1: Authenticate with Google Cloud using the provided service account key
+          gcloud auth activate-service-account --key-file=/secrets/${SERVICE_ACCOUNT_NAME}/service_account.json
+
+          # Step 2: Get the credentials for the GKE cluster and set up kubectl configuration.
+          gcloud container clusters get-credentials ${CLUSTER_NAME} --zone=${COMPUTE_ZONE} --project=$PROJECT_ID
+
+          # Step 3: Fetch the latest version of the specified secret from Secret Manager
+          gcloud secrets versions access latest --secret=${SECRET_MANAGER_FILE_NAME} > /secrets/test_settings.txt
+          ENV_VARS="/secrets/test_settings.txt"
+          . "$ENV_VARS"
+          MY_CONTEXT=$(kubectl config get-contexts)
+          CONFIG_VIEW=$(kubectl config view)
+          echo "MY_CONTEXT: $MY_CONTEXT"
+          echo "CONFIG_VIEW: $CONFIG_VIEW"
+          echo "Override some variables that was used to create containers at cloudbuild"
+          kubectl create configmap $CONFIGMAP_NAME \
+            --from-literal=PORT="$CONTAINER_PORT" \
+            --from-literal=CONN_MAX_AGE="$CONN_MAX_AGE" \
+            --from-literal=COMPRESS_ENABLED="$COMPRESS_ENABLED" \
+            --from-literal=DJANGO_ACCOUNT_ALLOW_REGISTRATION="$DJANGO_ACCOUNT_ALLOW_REGISTRATION" \
+            --from-literal=DJANGO_ADMIN_URL="$DJANGO_ADMIN_URL" \
+            --from-literal=DJANGO_ALLOWED_HOSTS="$DJANGO_ALLOWED_HOSTS" \
+            --from-literal=DJANGO_DEBUG="$DJANGO_DEBUG" \
+            --from-literal=DJANGO_DEFAULT_FROM_EMAIL="$DJANGO_DEFAULT_FROM_EMAIL" \
+            --from-literal=DJANGO_EMAIL_SUBJECT_PREFIX="$DJANGO_EMAIL_SUBJECT_PREFIX" \
+            --from-literal=DJANGO_GCP_STORAGE_BUCKET_NAME="$DJANGO_GCP_STORAGE_BUCKET_NAME" \
+            --from-literal=DJANGO_READ_DOT_ENV_FILE="$DJANGO_READ_DOT_ENV_FILE" \
+            --from-literal=DJANGO_SECRET_KEY="$DJANGO_SECRET_KEY" \
+            --from-literal=DJANGO_SECURE_BROWSER_XSS_FILTER="$DJANGO_SECURE_BROWSER_XSS_FILTER" \
+            --from-literal=DJANGO_SECURE_CONTENT_TYPE_NOSNIFF="$DJANGO_SECURE_CONTENT_TYPE_NOSNIFF" \
+            --from-literal=DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS="$DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS" \
+            --from-literal=DJANGO_SECURE_FRAME_DENY="$DJANGO_SECURE_FRAME_DENY" \
+            --from-literal=DJANGO_SECURE_SSL_REDIRECT="$DJANGO_SECURE_SSL_REDIRECT" \
+            --from-literal=DJANGO_SERVER_EMAIL="$DJANGO_SERVER_EMAIL" \
+            --from-literal=DJANGO_SESSION_COOKIE_HTTPONLY="$DJANGO_SESSION_COOKIE_HTTPONLY" \
+            --from-literal=DJANGO_SESSION_COOKIE_SECURE="$DJANGO_SESSION_COOKIE_SECURE" \
+            --from-literal=DJANGO_SETTINGS_MODULE=${K8TS_DJANGO_SETTINGS_MODULE} \
+            --from-literal=GOOGLE_ANALYTICS_ID="$GOOGLE_ANALYTICS_ID" \
+            --from-literal=GOOGLE_APPLICATION_CREDENTIALS_KEY="$GOOGLE_APPLICATION_CREDENTIALS_KEY" \
+            --from-literal=GOOGLE_CLOUD_PROJECT="$GOOGLE_CLOUD_PROJECT" \
+            --from-literal=INSTANCE_CONNECTION_NAME="$INSTANCE_CONNECTION_NAME" \
+            --from-literal=MAILGUN_DOMAIN="$MAILGUN_DOMAIN" \
+            --from-literal=MAILGUN_API_URL="$MAILGUN_API_URL" \
+            --from-literal=MAILGUN_API_KEY="$MAILGUN_API_KEY" \
+            --from-literal=POSTGRES_DB="$POSTGRES_DB" \
+            --from-literal=POSTGRES_HOST="${K8TS_POSTGRES_HOST}" \
+            --from-literal=POSTGRES_PORT="${K8TS_POSTGRES_PORT}" \
+            --from-literal=POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
+            --from-literal=POSTGRES_USER="$POSTGRES_USER" \
+            --from-literal=PUB_SUB_TOPIC="$PUB_SUB_TOPIC" \
+            --from-literal=SENTRY_DSN="$SENTRY_DSN" \
+            --from-literal=SENTRY_ENVIRONMENT="$SENTRY_ENVIRONMENT" \
+            --from-literal=USE_DOCKER="$USE_DOCKER" \
+            --from-literal=WEB_CONCURRENCY="$WEB_CONCURRENCY" \
+            --from-literal=WHITELISTED_DOMAINS="$WHITELISTED_DOMAINS"
+
+        volumeMounts:
+        - name: service-account-vol
+          mountPath: "/secrets/{{ .Values.common.service_account_name }}"
+          readOnly: true
+      volumes:
+      - name: service-account-vol
+        secret:
+          secretName: {{ .Values.common.service_account_name }}
