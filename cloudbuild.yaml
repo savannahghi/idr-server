@@ -82,42 +82,6 @@ steps:
     args:
       - cluster-info
 
-  # Show kubernetes manifest with values substituted
-  - id: "show kubernetes manifest"
-    dir: "deploy"
-    name: "gcr.io/$PROJECT_ID/helm:3.7.0"
-    env:
-      - KUBECONFIG=/workspace/.kube/config
-    args:
-      - template
-      - ${_APP_NAME}-${_DEPLOYMENT_TYPE}
-      - --namespace=${_NAMESPACE}
-      - --values
-      - values.yaml
-      - --set
-      - namespace=${_NAMESPACE}
-      - --set
-      - django.image.repository=${_IMAGE_NAME}
-      - --set
-      - django.image.tag=$COMMIT_SHA
-      - --set
-      - ingress.networking.domain=${_DOMAIN_NAME}
-      - --set
-      - ingress.networking.issuer.name=${_LETSENCRYPT_SERVER_TYPE}
-      - --set
-      - ingress.networking.static_ip_name=${_STATIC_IP_NAME}
-      - --set
-      - pg_bouncer.env.db_name=${_PG_NAME}
-      - --set
-      - pg_bouncer.env.db_user=${_PG_USER}
-      - --set
-      - pg_bouncer.env.db_password=${_PG_PASSWORD}
-      - --set
-      - cloud_sql.env.cloudsql_connection_instance=${_CLOUDSQL_INSTANCE_CONNECTION_NAME}
-      - --set
-      - django.configmap.config_name=${_CONFIGMAP_FILE}
-      - .
-
   # Update essential Variables and Deploy to cluster
   - id: "update essential variables and start deployment to cluster"
     dir: "deploy"
@@ -128,21 +92,36 @@ steps:
       - upgrade
       - --install
       - ${_APP_NAME}-${_DEPLOYMENT_TYPE}
+      - --create-namespace
       - --namespace=${_NAMESPACE}
+      - --atomic
+      - --debug
       - --values
       - values.yaml
       - --set
-      - namespace=${_NAMESPACE}
+      - common.project_id=$PROJECT_ID
+      - --set
+      - common.cluster_name=${_GKE_CLUSTER}
+      - --set
+      - common.compute_zone=${_GKE_COMPUTE_ZONE}
+      - --set
+      - common.cluster_namespace=${_NAMESPACE}
       - --set
       - django.image.repository=${_IMAGE_NAME}
       - --set
       - django.image.tag=$COMMIT_SHA
       - --set
+      - secret_manager.file_name=${_SETTINGS_NAME}
+      - --set
+      - django.env.django_settings_module=${_K8TS_DJANGO_SETTINGS_MODULE}
+      - --set
+      - django.env.postgres_host=${_K8TS_PG_HOST}
+      - --set
+      - django.env.postgres_port=${_K8TS_PG_PORT}
+      - --set
       - ingress.networking.domain=${_DOMAIN_NAME}
       - --set
       - ingress.networking.issuer.name=${_LETSENCRYPT_SERVER_TYPE}
-      - --set
-      - ingress.networking.static_ip_name=${_STATIC_IP_NAME}
       - --set
       - pg_bouncer.env.db_name=${_PG_NAME}
       - --set
@@ -152,7 +131,7 @@ steps:
       - --set
       - cloud_sql.env.cloudsql_connection_instance=${_CLOUDSQL_INSTANCE_CONNECTION_NAME}
       - --set
-      - django.configmap.config_name=${_CONFIGMAP_FILE}
+      - common.service_account_key=${_IAM_SERVICE_ACCOUNT_KEY}
       - .
 
 images:
