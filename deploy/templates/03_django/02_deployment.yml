@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.django.app_name }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Values.common.cluster_namespace }}
   labels:
     app: {{ .Values.django.app_name }}
 spec:
@@ -18,20 +18,20 @@ spec:
       containers:
         - name: {{ .Values.django.app_name }}
           image: {{ .Values.django.image.repository }}:{{ .Values.django.image.tag }}
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.django.image.pull_policy }}
           ports:
             - name: http
               protocol: TCP
               containerPort: {{ .Values.django.image.container_port }}
           envFrom:
             - configMapRef:
-                name: {{ .Values.django.configmap.config_name }}
+                name: {{ .Values.django.app_name }}-settings
           volumeMounts:
             - name: env-var-vol
-              mountPath: /secrets/environment_variables
+              mountPath: "/secrets/{{ .Values.django.app_name }}-settings"
               readOnly: true
 
       volumes:
         - name: env-var-vol
           configMap:
-            name: {{ .Values.django.configmap.config_name }}
+            name: {{ .Values.django.app_name }}-settings
