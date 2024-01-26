@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Values.pg_bouncer.app_name }}-pgb-config
+  namespace: {{ .Values.common.cluster_namespace }}
 data:
   pgbouncer.ini: |
     [databases]

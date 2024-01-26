@@ -1,4 +1,17 @@
-namespace: cluster_namespace
+common:
+  project_id: "project-id"
+  cluster_name: "cluster-name"
+  compute_zone: "compute-zone"
+  cluster_namespace: "work-namespace"
+  service_account_key: "base64_encoded_sa_key"
+  service_account_name: "iam-service-account-key"
+
+cloud_sdk:
+  ttl_after_success: 600
+  image:
+    repository: gcr.io/google.com/cloudsdktool/cloud-sdk
+    tag: "459.0.0"
+    pull_policy: IfNotPresent
 
 django:
   app_name: django
@@ -15,6 +28,10 @@ django:
     config_name: "config_name"
   secrets:
     secrets_name: "secrets_name"
+  env:
+    django_settings_module: django_settings_module
+    postgres_host: postgres_host
+    postgres_port: postgres_port
 
 cloud_sql:
   app_name: cloudsql-proxy
@@ -41,11 +58,13 @@ pg_bouncer:
     db_user: "database_user"
     db_password: "database_password"
 
+secret_manager:
+  file_name: secret_manager_file_name
+
 ingress:
   app_name: ingress
   networking:
     domain: ""
-    static_ip_name: ""
     issuer:
       name: "letsencrypt-staging"
       acme:

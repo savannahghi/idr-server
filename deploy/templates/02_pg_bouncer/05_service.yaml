@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Values.pg_bouncer.app_name }}-service
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Values.common.cluster_namespace }}
   annotations:
     cloud.google.com/load-balancer-type: "Internal"
   labels:

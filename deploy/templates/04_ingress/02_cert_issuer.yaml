@@ -2,7 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: {{ .Values.ingress.networking.issuer.name }}
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Values.common.cluster_namespace }}
 spec:
   acme:
     server: {{ .Values.ingress.networking.issuer.acme.server }}
