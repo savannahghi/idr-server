@@ -72,8 +72,9 @@ jobs:
         python -m pip install tox tox-gh-actions
         npm ci
 
+    - uses: actions/checkout@v4
     - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v0
+      uses: google-github-actions/auth@v2
       with:
         credentials_json: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}"
 
