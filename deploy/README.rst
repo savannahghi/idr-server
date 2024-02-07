@@ -8,19 +8,19 @@ IDR Server Deployment Chart
 Prerequisites
 -------------
 
-- **1. cluster:** Ensure you have created a kubernetes cluster to which the
+ **1. cluster:** Ensure you have created a kubernetes cluster to which the
   app will be deployed.
-- **2. helm:** We use helm as our deployment tool. Make sure you have helm installed
+ **2. helm:** We use helm as our deployment tool. Make sure you have helm installed
   to the project's gcr. See `helm repo`_ on how to add helm to gcp project.
-- **3. public domain:** In the context of `gcp` projects, you can achieve this by
+ **3. public domain:** In the context of `gcp` projects, you can achieve this by
   reserving a global static IP address and mapping the IP to a public domain.
 
 
 TLS Cert management and External traffic control
 ------------------------------------------------
 
-- This will be a `one-time setup` of the relevant objects in a cluster-wide context. We will
-  use `cert-manager` for tls cert management and `kong` as our ingress controller.
+- This will be a `one-time setup` of the relevant objects in a cluster-wide context.
+  We will use `cert-manager` for tls cert management and `kong` as our ingress controller.
 
 - **First ensure to be in the right context by running:**
 
@@ -128,13 +128,20 @@ Next steps
   configuration file. Similarly, `POSTGRES_HOST` should be updated to point to
   the pgbouncer service, and `POSTGRES_PORT` should be set to the pgbouncer port
 
-**NOTICE:**
+Deployment
+-----------
+- Once the necessary variables have been set, run git push to any of the branches
+  hooked to cloud triggers. This will trigger deployment to one of the namespaces
+  specified in the `_NAMESPACE` variable.
 
-- Helm executes files lexicographically; hence, the naming of the directories
+**NOTE:**
+
+- Helm executes files `lexicographically`; hence, the naming of the directories
   and manifest files in the templates folder follows the order of their dependencies
 - Careful with names and passwords that contain special characters since `template rendering engine`_
   will most probably evaluate to changed variable values.
-- ...delay in generation of `cert` and `key` ...
+- Even with successful deployment, sometimes you may have delay in generation of `cert` and `key`
+  for the ingress; **wait** for the cert to be generated.
 
 
 .. _`kubernetes`: https://kubernetes.io/
