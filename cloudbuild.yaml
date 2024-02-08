@@ -1,5 +1,5 @@
 steps:
-  # Build the container image
+  # Build the container image.
   - id: "build image"
     name: "gcr.io/cloud-builders/docker"
     args:
@@ -10,7 +10,7 @@ steps:
         ".",
       ]
 
-  # Push the container image to Container Registry
+  # Push the container image to Container Registry.
   - id: "push image"
     name: "gcr.io/cloud-builders/docker"
     args:
@@ -19,7 +19,7 @@ steps:
         "${_IMAGE_NAME}:$COMMIT_SHA"
       ]
 
-  # Apply the latest migrations
+  # Apply the latest migrations.
   - id: "apply migrations"
     name: "gcr.io/google-appengine/exec-wrapper"
     args:
@@ -71,7 +71,7 @@ steps:
         "--", "python", "/app/manage.py", "compress"
       ]
 
-  # Get credentials for the cluster
+  # Get credentials for the cluster.
   - id: "get credentials for the cluster"
     name: "gcr.io/cloud-builders/kubectl"
     env:
@@ -113,11 +113,11 @@ steps:
       - --set
       - secret_manager.file_name=${_SETTINGS_NAME}
       - --set
-      - django.env.django_settings_module=${_K8TS_DJANGO_SETTINGS_MODULE}
+      - django.env.django_settings_module=${_DJANGO_SETTINGS_MODULE}
       - --set
-      - django.env.postgres_host=${_K8TS_PG_HOST}
+      - django.env.postgres_host=${_PG_BOUNCER_HOST}
       - --set
-      - django.env.postgres_port=${_K8TS_PG_PORT}
+      - django.env.postgres_port=${_PG_BOUNCER_PORT}
       - --set
       - ingress.networking.domain=${_DOMAIN_NAME}
       - --set

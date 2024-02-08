@@ -86,7 +86,6 @@ spec:
             --from-literal=POSTGRES_PORT="${K8TS_POSTGRES_PORT}" \
             --from-literal=POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
             --from-literal=POSTGRES_USER="$POSTGRES_USER" \
-            --from-literal=PUB_SUB_TOPIC="$PUB_SUB_TOPIC" \
             --from-literal=SENTRY_DSN="$SENTRY_DSN" \
             --from-literal=SENTRY_ENVIRONMENT="$SENTRY_ENVIRONMENT" \
             --from-literal=USE_DOCKER="$USE_DOCKER" \
