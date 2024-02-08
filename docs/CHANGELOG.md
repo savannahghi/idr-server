@@ -1,3 +1,19 @@
+## [1.6.3](https://github.com/savannahghi/idr-server/compare/v1.6.2...v1.6.3) (2024-02-08)
+
+
+### Dependency Updates
+
+* **deps:** bump axios and browser-sync ([#78](https://github.com/savannahghi/idr-server/issues/78)) ([fe6fa6e](https://github.com/savannahghi/idr-server/commit/fe6fa6eaa1e7d93a480f652be862c6ab579b1ad3))
+* **deps:** bump crypto-js from 4.1.1 to 4.2.0 ([#71](https://github.com/savannahghi/idr-server/issues/71)) ([2cc8003](https://github.com/savannahghi/idr-server/commit/2cc80031e0540ed82c099d40bcaa6a082be66711))
+
+
+### Refactors
+
+* **build:** add switch deployment strategy from cloud run to Kubernetes ([#68](https://github.com/savannahghi/idr-server/issues/68)) ([bd83544](https://github.com/savannahghi/idr-server/commit/bd835447b10aeb8699982e8637835b6188b70c76))
+* **deps-dev:** bump follow-redirects from 1.15.2 to 1.15.4 ([#72](https://github.com/savannahghi/idr-server/issues/72)) ([ae8c613](https://github.com/savannahghi/idr-server/commit/ae8c613e1af781bf8bf2436ef3c14a55d658c83e))
+* remove pubsub ([#69](https://github.com/savannahghi/idr-server/issues/69)) ([b1aa91d](https://github.com/savannahghi/idr-server/commit/b1aa91d364af6c8e954ba60cbf409895321ec3fc))
+* update variables consumed in the app ([#77](https://github.com/savannahghi/idr-server/issues/77)) ([a253e3f](https://github.com/savannahghi/idr-server/commit/a253e3fb7d327a5cb1b029d4cc40211fdf21f1a1))
+
 ## [1.6.2](https://github.com/savannahghi/idr-server/compare/v1.6.1...v1.6.2) (2023-04-05)
 
 
