@@ -1,11 +1,112 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools~=80.9.0", "setuptools_scm[toml]~=8.3.1"]
+
+[project]
+authors = [
+    {name = "Savannah Global Health Institue"}
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: Proprietary",
+    "Natural Language :: English",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Utilities",
+    "Typing :: Typed"
+]
+dependencies = [
+    "argon2-cffi==23.1.0",
+    "argon2-cffi-bindings~=21.2.0",
+    "channels~=4.0.0",
+    "crispy-bootstrap5~=0.7",
+    "django-allauth~=0.54.0",
+    "django-compressor~=4.1",
+    "django-cors-headers~=3.14.0",
+    "django-crispy-forms~=2.0",
+    "django-extensions~=3.2.1",
+    "django-filter~=23.1",
+    "django-rest-knox~=4.2.0",
+    "django-storages~=1.13.1",
+    "Django~=4.2",
+    "djangorestframework~=3.14.0",
+    "environs~=9.5.0",
+    "google-auth~=2.17.1",
+    "openpyxl~=3.1.2",
+    "psycopg[binary]~=3.3.2",
+    "pyexcel-io~=0.6.6",
+    "pyexcel-xlsx~=0.6.0",
+    "pyexcel~=0.7.0",
+    "toml~=0.10.2",
+    "typing-extensions~=4.5.0",
+    "whitenoise~=6.4.0",
+]
+description = "A service that houses metadata for/and receives extracted data from IDR Clients."
+dynamic = ["version"]
+keywords = ["sghi", "IDR"]
+license = {file = "LICENSE"}
+maintainers = [
+    {name = "Kennedy Kori", email = "kennedy@savannahinformatics.com"},
+]
+name = "sghi-idr-server"
+readme = "README.md"
+requires-python = ">=3.12" # Support Python 3.12+.
+
+[project.optional-dependencies]
+dev = [
+    "ipython~=8.12.0",
+    "pre-commit~=3.2.1",
+]
+production = [
+    "google-api-core~=2.11.0",
+    "google-api-python-client~=2.83.0",
+    "google-auth-httplib2~=0.1.0",
+    "google-cloud-secret-manager~=2.16.1",
+    "google-cloud-storage~=2.8.0",
+    "google-crc32c~=1.5.0",
+    "google-resumable-media~=2.4.0",
+    "googleapis-common-protos~=1.59.0",
+    # -> "grpc-google-iam-v1~=0.12.4",
+    # -> "grpcio-status~=1.53.0",
+    # -> "grpcio~=1.53.0",
+    "gunicorn~=20.1.0",
+    "python-dotenv~=1.0.0",
+    "sentry-sdk~=1.19.0",
+    "uvicorn~=0.21.1",
+]
+test = [
+    "black~=23.3.0",
+    "coverage~=6.5.0",
+    "coveralls~=3.3.1",
+    "django-coverage-plugin~=3.0.0",
+    "django-stubs-ext~=0.8.0",
+    "django-stubs~=1.16.0",
+    "factory-boy~=3.2.1",
+    "Faker~=18.3.2",
+    "flake8-isort~=6.0.0",
+    "flake8~=6.0.0",
+    "isort~=5.12.0",
+    "model-bakery~=1.10.3",
+    "mypy-extensions~=1.0.0",
+    "pyright~=1.1.301",
+    "pytest-cov~=4.0.0",
+    "pytest-django~=4.5.2",
+    "pytest-forked~=1.6.0",
+    "pytest-sugar~=0.9.5",
+    "pytest-xdist~=3.2.1",
+    "pytest~=7.2.2",
+    "tox~=4.4.8",
+]
+
 [tool.black]
 line-length = 79
 target-version = ["py39"]
 
-
 [tool.coverage.html]
 directory = "coverage"
-
 
 [tool.coverage.report]
 exclude_lines = [
@@ -18,7 +119,7 @@ exclude_lines = [
     "raise NotImplementedError",
 
     # Don't complain about abstract methods, they aren't run:
-    '@(abc\.)?abstractmethod'
+    '@(abc\.)?abstractmethod',
 ]
 show_missing = true
 
@@ -41,14 +142,12 @@ omit = [
 plugins = ["django_coverage_plugin"]
 source = ["apps"]
 
-
 [tool.isort]
 extend_skip = "docs"
 extend_skip_glob = ["*/migrations/*", "*/static/CACHE/*"]
 line_length = 79
 multi_line_output = 3
 profile = "black"
-
 
 [tool.pyright]
 enableTypeIgnoreComments = true
@@ -57,7 +156,7 @@ ignore = [
     "apps/**/migrations/*",
     "config/*",
     "node_modules/*",
-    "staticfiles/*"
+    "staticfiles/*",
 ]
 include = ["apps/"]
 pythonVersion = "3.9"
@@ -75,7 +174,6 @@ strictParameterNoneValue = true
 strictSetInference = true
 typeCheckingMode = "basic"
 
-
 [tool.pytest.ini_options]
 addopts = "--ds=config.settings.test --cov-fail-under=100 --cov --cov-config=pyproject.toml --cov-report=html --cov-report=term-missing -n auto --junitxml='junitxml_report/report.xml' -v --durations=10 --cache-clear --create-db"
 console_output_style = "progress"
@@ -85,3 +183,13 @@ log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(linen
 log_cli_level = "ERROR"
 norecursedirs = "node_modules venv build env bin .cache .tox"
 python_files = ["*test.py", "test_*.py"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+namespaces = true
+where = ["src"]
+
+[tool.setuptools_scm]
+root = "."
