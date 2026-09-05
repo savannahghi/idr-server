@@ -125,3 +125,6 @@ Create a database for the app and proceed in with these steps:
 [MIT License](https://github.com/savannahghi/idr-client/blob/develop/LICENSE)
 
 Copyright (c) 2022, Savannah Informatics Global Health Institute
+
+
+<!-- Security scan triggered at 2026-09-05 07:57:15 -->
